@@ -1,31 +1,59 @@
 
 <!DOCTYPE html>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="./assets/stylesheets/app.css">
+<link href="https://fonts.googleapis.com/css?family=Chakra+Petch|Roboto+Condensed" rel="stylesheet">
 <script type="text/javascript" src="./lib/bundle.js" charset="utf-8"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <html>
     <head>
-        <title>jQueery Tester</title>
+        <title>MemePool</title>
     </head>
     <body>
-        <div id="one" class="one">
-            <ul>
-                <li></li>
-                <li></li>
-                <li></li>
-            </ul>
+        <div id="left"></div>
+        <div id="top"></div>
+        <div id="right"></div>
+        <div id="bottom"></div>
+        <img src="./assets/images/memepool_logo.svg" id="logo">
+        <h1 id="intro">Search, customize & share your memes!</h4>
+        <div id="bar">
+            <div class="inner-bar">
+                <!-- <svg viewBox="0 0 80 150" xmlns="http://www.w3.org/2000/svg" id="add-button">
+                    <circle cx="60" cy="60" r="55" stroke="#a484ff" fill="#fff" />
+                    <rect x="15" y="47.5" width="90" height="25" rx="10" ry="10" stroke="#a484ff" fill="#a484ff" />
+                    <rect x="47.5" y="15" width="25" height="90" rx="10" ry="10" stroke="#a484ff" fill="#a484ff" />
+                    <rect x="47.5" y="48.5" width="25" height="23" stroke="#a484ff" fill="#a484ff" />
+                </svg> -->
+                <p id="add-button">+</p>
+                <div id="search-container">
+                    <input type="text" placeholder="Search..." />
+                    <i class="fas fa-search"></i>
+                </div>
+                <button>Browse</button>
+            </div>
         </div>
-        <div id="two" class="two">
-            <a href="" class="a">a <span>long</span></a>
-            <a href="">a doors</a>
-            <a href="">pit</a>
+        <div class="content">
+            <form>
+            </form>
+            <div id="database">
+            </div>
         </div>
-        <div id="three" class="three">
-            <button class="add">Add</button>
-            <button class="delete">Delete</button>
-            <h1>Hi</h1>
-            <h1>Hello</h1>
-            <h1>Hey <span>there</span></h1>
-            <h1 class="last">Hola</h1>
-        </div>
+        <!-- <form>
+            <label>
+                Title
+                <input type="text" />
+            </label>
+            <label>
+                Upper text
+                <input type="text" />
+            </label>
+            <label>
+                Lower text
+                <input type="text" />
+            </label>
+            <input type="file" accept="image/*">
+            <button>Generate</button>
+        </form> -->
+        <!-- <div id="canvas" class="two"></div> -->
     </body>
 </html>
