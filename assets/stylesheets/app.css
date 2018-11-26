@@ -12,7 +12,7 @@ body {
     left: 0;
     width: 15px;
     height: 100%;
-    background-color: #ff8266;
+    background-color: #ff7373;
     transition: all 0.4s ease;
 }
 
@@ -105,7 +105,7 @@ header.hidden {
     margin: 0 auto;
 }
 
-.inner-bar #add-button {
+.inner-bar .add-button {
     width: 45px;
     height: 45px;
     color: #a484ff;
@@ -116,19 +116,29 @@ header.hidden {
     margin: 0;
     margin-right: 10px;
     text-align: center;
+    cursor: pointer;
+    transition: all 0.1s ease;
 }
 
-.inner-bar #add-button {
-    width: 45px;
-    height: 45px;
-    color: #a484ff;
-    font-size: 35px;
-    font-weight: bold;
-    border: 1px solid #a484ff;
-    border-radius: 50%;
-    margin: 0;
-    margin-right: 10px;
-    text-align: center;
+.inner-bar .add-button:hover {
+    background-color: #c8b5ff;
+    color: white;
+    border-color: #c8b5ff;
+    transition: all 0.2s ease;
+}
+
+.inner-bar .add-button.pressed {
+    background-color: #a484ff;
+    color: white;
+    border-color: #a484ff;
+    transition: all 0.1s ease;
+}
+
+.inner-bar .add-button.pressed:hover {
+    background-color: #c8b5ff;
+    color: white;
+    border-color: #c8b5ff;
+    transition: all 0.2s ease;
 }
 
 .inner-bar #add-button:hover {
