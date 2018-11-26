@@ -47,19 +47,35 @@ class Bar {
     }
 
     toggleForm() {
-        this.uploadButton.toggleClass("pressed");
-        this.uploadForm.toggleClass("hidden");
         setTimeout(() => {
+            this.uploadButton.toggleClass("pressed");
+            this.uploadForm.toggleClass("hidden");
+        }, 100);
+    }
+
+    toggle() {
+        if (this.opened) {
             this.uploadForm.children().each((child) => {
                 debugger
                 $$(child).toggleClass("hidden");
-            })
-        }, 200);
+            });
+            this.toggleForm();
+            this.opened = false;
+        } else {
+            this.toggleForm();
+            setTimeout(() => {
+                this.uploadForm.children().each((child) => {
+                    debugger
+                    $$(child).toggleClass("hidden");
+                })
+            }, 350);
+            this.opened = true;
+        }
     }
 
     render() {
         $$(() => setTimeout(() => this.bar.removeClass("hidden"), 500));
-        this.uploadButton.on("click", () => this.toggleForm());
+        this.uploadButton.on("click", () => this.toggle());
     }
 }
 
