@@ -20,11 +20,13 @@ class MemePool {
         this.header = new Header();
         this.uploadForm = new UploadForm();
         this.bar = new Bar({uploadForm: this.uploadForm.form});
+        this.memesContainer = new MemesContainer();
     }
 
     render() {
         this.header.render();
         this.bar.render();
+        this.memesContainer.render();
     }
 }
 
@@ -89,3 +91,20 @@ class UploadForm {
     }
 }
 
+class MemesContainer {
+    constructor() {
+        this.memesContainer = $$(".memes-container.hidden");
+    }
+
+    render() {
+        debugger
+        $$(() => setTimeout(() => this.memesContainer.removeClass("hidden"), 500));        
+        this.memesContainer.children().each((child) => {
+            const node = $$(child);
+            node.removeClass("hidden");
+            setTimeout(() => {
+                node.children().each((child) => $$(child).removeClass("hidden"))
+            }, 1000);
+        })
+    }
+}
