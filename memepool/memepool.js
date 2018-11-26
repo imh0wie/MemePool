@@ -1,8 +1,12 @@
-class MemePool {
-    constructor() {
-        
-    }
+// class MemePool {
+//     constructor() {
+//         this.bgBars = $$.
+//     }
 
-}
+//     render() {
 
-export default MemePool;
+//     }
+
+// }
+
+// export default MemePool;

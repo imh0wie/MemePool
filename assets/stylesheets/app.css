@@ -6,44 +6,62 @@ body {
     background-color: #fff;
 }
 
-#left {
+.left {
     position: fixed;
-    top: 0;
+    top: 15px;
     left: 0;
     width: 15px;
     height: 100%;
     background-color: #ff8266;
-    z-index: 1;
+    transition: all 0.4s ease;
 }
 
-#top {
+.left.hidden {
+    height: 0;
+}
+
+.top {
     position: fixed;
     top: 0;
-    left: 0;
+    right: 15px;
     width: 100%;
     height: 15px;
     background-color: #00bcd4;
-    z-index: 2;
+    transition: all 0.4s ease;
 }
 
-#right {
+
+.top.hidden {
+    width: 0;
+}
+
+.right {
     position: fixed;
-    bottom: 0px;
+    bottom: 15px;
     right: 0px;
     width: 15px;
     height: 100%;
     background-color: #fbf300;
-    z-index: 3;
+    transition: all 0.4s ease;
 }
 
-#bottom {
+.right.hidden {
+    height: 0;
+}
+
+.bottom {
     position: fixed;
     bottom: 0px;
-    right: 0;
-    width: 1425px;
+    left: 15px;
+    width: 100%;
     height: 15px;
     background-color: #00d44b;
-    z-index: 4;
+    transition: all 0.4s ease;
+}
+
+
+.bottom.hidden {
+    width: 0;
 }
 
 #logo {
@@ -78,9 +96,31 @@ body {
     margin: 0;
     margin-right: 10px;
     text-align: center;
-    /* padding-bottom: 0px; */
-    /* display: table-cell; */
-    /* text-ßcal-align: middle; */
+}
+
+.inner-bar #add-button {
+    width: 45px;
+    height: 45px;
+    color: #a484ff;
+    font-size: 35px;
+    font-weight: bold;
+    border: 1px solid #a484ff;
+    border-radius: 50%;
+    margin: 0;
+    margin-right: 10px;
+    text-align: center;
+}
+
+.inner-bar #add-button:hover {
+    color: white;
+    font-size: 35px;
+    font-weight: bold;
+    background-color: #cdbcff;
+    border: 1px solid #f2f2f2;
+    border-radius: 50%;
+    margin: 0;
+    margin-right: 10px;
+    text-align: center;
 }
 
 .inner-bar #search-container {
@@ -116,4 +156,8 @@ body {
     padding: 8px 16px;
     border-radius: 8px;
     font-size: 16px;
+}
+
+.inner-bar #browse:hover {
+    background-color: #ff7835;
 }

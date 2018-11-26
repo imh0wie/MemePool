@@ -4,18 +4,23 @@
 <link rel="stylesheet" type="text/css" href="./assets/stylesheets/app.css">
 <link href="https://fonts.googleapis.com/css?family=Chakra+Petch|Roboto+Condensed" rel="stylesheet">
 <script type="text/javascript" src="./lib/bundle.js" charset="utf-8"></script>
+<script type="text/javascript" src="./memepool/app.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <html>
     <head>
         <title>MemePool</title>
     </head>
     <body>
-        <div id="left"></div>
-        <div id="top"></div>
-        <div id="right"></div>
-        <div id="bottom"></div>
-        <img src="./assets/images/memepool_logo.svg" id="logo">
-        <h1 id="intro">Search, customize & share your memes!</h4>
+        <div class="bg-bars">
+            <div class="left hidden"></div>
+            <div class="top hidden"></div>
+            <div class="right hidden"></div>
+            <div class="bottom hidden"></div>
+        </div>
+        <header class="hidden">
+            <img src="./assets/images/memepool_logo.svg" id="logo">
+            <h1 id="intro">Search, customize & share memes!</h4>
+        </header>
         <div id="bar">
             <div class="inner-bar">
                 <!-- <svg viewBox="0 0 80 150" xmlns="http://www.w3.org/2000/svg" id="add-button">
