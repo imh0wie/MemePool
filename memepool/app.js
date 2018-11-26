@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // setTimeout(() => {
         //     bgBars.each(bar => {
-        //         debugger
         //         $$(bar).removeClass("hidden")
         //     });
         // }, 0)
@@ -19,8 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
 class MemePool {
     constructor() {
         this.header = new Header();
-        this.bar = new Bar();
         this.uploadForm = new UploadForm();
+        this.bar = new Bar({uploadForm: this.uploadForm.form});
     }
 
     render() {
@@ -40,15 +39,27 @@ class Header {
 }
 
 class Bar {
-    constructor() {
+    constructor(options) {
         this.bar = $$(".bar.hidden")
         this.uploadButton = $$(".add-button");
+        this.uploadForm = options.uploadForm;
+        this.opened = false;
+    }
+
+    toggleForm() {
+        this.uploadButton.toggleClass("pressed");
+        this.uploadForm.toggleClass("hidden");
+        setTimeout(() => {
+            this.uploadForm.children().each((child) => {
+                debugger
+                $$(child).toggleClass("hidden");
+            })
+        }, 200);
     }
 
     render() {
         $$(() => setTimeout(() => this.bar.removeClass("hidden"), 500));
-        this.uploadButton.on("click", (e) => this.uploadButton.toggleClass("pressed"));
-        debugger
+        this.uploadButton.on("click", () => this.toggleForm());
     }
 }
 
