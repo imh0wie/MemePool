@@ -64,19 +64,39 @@ body {
     width: 0;
 }
 
+header {
+    opacity: 1;
+    transition: all 0.4s ease;
+}
+
+header.hidden {
+    opacity: 0;
+}
+
 #logo {
     display: block;
     width: 700px;
     margin: 0 auto;
     position: relative;
-    top: 75px;
+    top: 10px;
 }
 
 #intro {
     color: #fff;
     font-family: 'Chakra Petch', sans-serif;
+    margin: 0;
     text-align: center;
     text-shadow: -1.5px 0 black, 0 1.5px black, 1.5px 0 black, 0 -1.5px black;
+}
+
+.bar {
+    margin-top: 20px;
+    opacity: 1;
+    transition: all 0.4s ease;
+}
+
+.bar.hidden {
+    opacity: 0;
 }
 
 .inner-bar {
@@ -137,7 +157,8 @@ body {
     width: 650px;
     height: 30px;
     background-color: #f2f2f2;
-    border: 0 !important;
+    border: 0;
+    font-family: 'Fjalla One', sans-serif;
     font-size: 18px;
     margin: 6px auto;
 }
@@ -160,4 +181,96 @@ body {
 
 .inner-bar #browse:hover {
     background-color: #ff7835;
+}
+
+.content {
+    display: flex;
+    width: 1140px;
+    margin: 0 auto;
+    margin-top: 20px;
+}
+
+.content form {
+    display: flex;
+    background-color: rgba(164, 132, 255, 0.6);
+    width: 500px;
+    height: 340px;
+    transition: all 0.4s ease;
+}
+
+.content form.hidden {
+    width: 0;
+    transition: all 0.4s ease;
+}
+
+.content form .blanks {
+    color: white;
+    font-family: 'Fjalla One', sans-serif;
+    height: 100%;
+    margin-left: 10px;
+    opacity: 1;
+    transition: all 0.4s ease;
+}
+
+.content form .blanks {
+    opacity: 0;
+    transition: all 0.4s ease;
+}
+
+.content form .blanks p {
+    font-size: 18px;
+    margin: 15px 0 0 0;
+}
+
+.content form .blanks input {
+    display: block;
+    width: 225px;
+    color: #333;
+    font-size: 16px;
+    font-family: 'Fjalla One', sans-serif;
+    margin: 10px 0 0 0;
+}
+
+.content form .preview {
+    opacity: 0;
+    width: 100%;
+    transition: all 0.4s ease;
+}
+
+.content form .preview.hidden {
+    opacity: 0;
+    transition: all 0.4s ease;
+}
+
+.content form .preview #canvas{
+    width: 180px;
+    height: 240px;
+    margin: 10px auto;
+    background-color: #f2f2f2;
+}
+
+.content form .preview input {
+    display: block;
+    margin: 0px 0px 0px 60px;
+    font-family: 'Fjalla One', sans-serif;
+}
+
+.content form .preview button {
+    display: block;
+    margin: 0 auto;
+    margin-top: 15px;
+    padding: 4px 8px;
+    border: 0px;
+    border-radius: 3px;
+    color: #a484ff;
+    font-size: 16px;
+    font-family: 'Fjalla One', sans-serif;
+    transition: all 0.4s ease;
+}
+
+.content form .preview button:hover {
+    background-color: #333;
+    color: white;
+    font-size: 18px;
+    transition: all 0.2s ease;
 }

@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
 <link rel="stylesheet" type="text/css" href="./assets/stylesheets/app.css">
-<link href="https://fonts.googleapis.com/css?family=Chakra+Petch|Roboto+Condensed" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Fjalla+One|Chakra+Petch|Roboto+Condensed" rel="stylesheet">
 <script type="text/javascript" src="./lib/bundle.js" charset="utf-8"></script>
 <script type="text/javascript" src="./memepool/app.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -21,7 +21,7 @@
             <img src="./assets/images/memepool_logo.svg" id="logo">
             <h1 id="intro">Search, customize & share memes!</h4>
         </header>
-        <div id="bar">
+        <div class="bar hidden">
             <div class="inner-bar">
                 <!-- <svg viewBox="0 0 80 150" xmlns="http://www.w3.org/2000/svg" id="add-button">
                     <circle cx="60" cy="60" r="55" stroke="#a484ff" fill="#fff" />
@@ -38,27 +38,25 @@
             </div>
         </div>
         <div class="content">
-            <form>
+            <form class="hidden">
+                <div class="blanks">
+                    <p>Title</p>
+                    <input type="text" />
+                    <p>Upper text</p>
+                    <input type="text" />
+                    <p>Lower text</p>
+                    <input type="text" />
+                    <p>Tags</p>
+                    <input type="text" />
+                </div>
+                <div class="preview">
+                    <div id="canvas" class="two"></div>
+                    <input type="file" accept="image/*" >
+                    <button>Share</button>
+                </div>
             </form>
             <div id="database">
             </div>
         </div>
-        <!-- <form>
-            <label>
-                Title
-                <input type="text" />
-            </label>
-            <label>
-                Upper text
-                <input type="text" />
-            </label>
-            <label>
-                Lower text
-                <input type="text" />
-            </label>
-            <input type="file" accept="image/*">
-            <button>Generate</button>
-        </form> -->
-        <!-- <div id="canvas" class="two"></div> -->
     </body>
 </html>
