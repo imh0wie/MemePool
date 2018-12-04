@@ -2,6 +2,11 @@
     outline: none;
 }
 
+.hidden {
+    opacity: 0;
+    transition: all 0.4s ease;
+}
+
 body {
     background-color: #fff;
 }
@@ -17,6 +22,7 @@ body {
 }
 
 .left.hidden {
+    opacity: 1;
     height: 0;
 }
 
@@ -28,10 +34,12 @@ body {
     height: 15px;
     background-color: #00bcd4;
     transition: all 0.4s ease;
+    z-index: 1;
 }
 
 
 .top.hidden {
+    opacity: 1;
     width: 0;
 }
 
@@ -46,6 +54,7 @@ body {
 }
 
 .right.hidden {
+    opacity: 1;
     height: 0;
 }
 
@@ -61,6 +70,7 @@ body {
 
 
 .bottom.hidden {
+    opacity: 1;
     width: 0;
 }
 
@@ -69,9 +79,9 @@ header {
     transition: all 0.4s ease;
 }
 
-header.hidden {
+/* header.hidden {
     opacity: 0;
-}
+} */
 
 #logo {
     display: block;
@@ -91,12 +101,7 @@ header.hidden {
 
 .bar {
     margin-top: 20px;
-    opacity: 1;
     transition: all 0.4s ease;
-}
-
-.bar.hidden {
-    opacity: 0;
 }
 
 .inner-bar {
@@ -139,18 +144,6 @@ header.hidden {
     color: white;
     border-color: #c8b5ff;
     transition: all 0.2s ease;
-}
-
-.inner-bar #add-button:hover {
-    color: white;
-    font-size: 35px;
-    font-weight: bold;
-    background-color: #cdbcff;
-    border: 1px solid #f2f2f2;
-    border-radius: 50%;
-    margin: 0;
-    margin-right: 10px;
-    text-align: center;
 }
 
 .inner-bar #search-container {
@@ -210,7 +203,6 @@ header.hidden {
 
 .content form.hidden {
     width: 0;
-    transition: all 0.4s ease;
 }
 
 .content form .blanks {
@@ -218,12 +210,10 @@ header.hidden {
     font-family: 'Fjalla One', sans-serif;
     height: 100%;
     margin-left: 10px;
-    opacity: 1;
     transition: all 0.4s ease;
 }
 
 .content form .blanks.hidden {
-    opacity: 0;
     transition: all 0.1s ease;
 }
 
@@ -242,13 +232,11 @@ header.hidden {
 }
 
 .content form .preview {
-    opacity: 1;
     width: 100%;
     transition: all 0.4s ease;
 }
 
 .content form .preview.hidden {
-    opacity: 0;
     transition: all 0.1s ease;
 }
 
@@ -295,33 +283,21 @@ header.hidden {
 }
 
 .content .memes-container.hidden {
-    height: 0px;
-    transition: all 0.4s ease;
+    opacity: 1;
+    height: 45px;
 }
 
 .content .memes-container header {
-    /* display: flex; */
     background-color: rgba(97, 97, 97, 0.6);
     color: #f2f2f2;
     font-family: 'Fjalla One', sans-serif;
     height: 45px;
 }
 
-.content .memes-container header.hidden {
-    /* display: flex; */
-    height: 0;
-}
-
 .content .memes-container header p {
     font-size: 36px;
     display: block;
     width: 30px;
-    margin: 0 0 0 0;
-    opacity: 1;
-    transition: all 0.4s ease;
-}
-
-.content .memes-container header p.hidden {
-    opacity: 0;
+    margin: 0;
     transition: all 0.4s ease;
 }

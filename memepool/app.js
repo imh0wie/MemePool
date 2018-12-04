@@ -2,14 +2,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const bgBars = $$(".bg-bars").children();
     $$(function() {
         bgBars.each(bar => {
+            debugger
             setTimeout(() => $$(bar).removeClass("hidden"), 0);
+            // setTimeout(() => bar.classList.contains("hidden-height") ? $$(bar).removeClass("hidden-height") : $$(bar).removeClass("hidden-height"), 0);
+            // setTimeout(() => {
+            //     if (bar.classList.contains("hidden-width")) {
+            //         $$(bar).removeClass("hidden-width");
+            //     } else {
+            //         $$(bar).removeClass("hidden-height");
+            //     }
+            // }, 0);
         });
-
-        // setTimeout(() => {
-        //     bgBars.each(bar => {
-        //         $$(bar).removeClass("hidden")
-        //     });
-        // }, 0)
     });
     memepool = new MemePool();
     memepool.render();
@@ -58,7 +61,6 @@ class Bar {
     toggle() {
         if (this.opened) {
             this.uploadForm.children().each((child) => {
-                debugger
                 $$(child).toggleClass("hidden");
             });
             this.toggleForm();
@@ -67,7 +69,6 @@ class Bar {
             this.toggleForm();
             setTimeout(() => {
                 this.uploadForm.children().each((child) => {
-                    debugger
                     $$(child).toggleClass("hidden");
                 })
             }, 350);
@@ -97,7 +98,6 @@ class MemesContainer {
     }
 
     render() {
-        debugger
         $$(() => setTimeout(() => this.memesContainer.removeClass("hidden"), 500));        
         this.memesContainer.children().each((child) => {
             const node = $$(child);
