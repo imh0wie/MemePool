@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const bgBars = $$(".bg-bars").children();
     $$(function() {
         bgBars.each(bar => {
-            debugger
             setTimeout(() => $$(bar).removeClass("hidden"), 0);
             // setTimeout(() => bar.classList.contains("hidden-height") ? $$(bar).removeClass("hidden-height") : $$(bar).removeClass("hidden-height"), 0);
             // setTimeout(() => {
@@ -26,7 +25,7 @@ class MemePool {
     constructor(options) {
         this.header = new Header(options);
         this.uploadForm = new UploadForm(options);
-        this.bar = new Bar(Object.assign(options, {uploadForm: this.uploadForm.form}));
+        this.bar = new Bar(Object.assign(options, { uploadForm: this.uploadForm }));
         this.memesContainer = new MemesContainer(options);
     }
 
@@ -41,19 +40,28 @@ class Komponent {
     constructor(options) {
         this.documentEl = options.documentEl;
     }
+    
     renderChildren(el, klass, t, cb = null, devault = true) {
         for (let i = 0; i < el.children().length; i++) {
             const child = el.children()[i];
-            if (devault) setTimeout(() => $(child).removeClass(klass), t);
+            if (devault) setTimeout(() => $$(child).removeClass(klass), t);
             if (cb) cb(child, t);
         }
+    }
+
+    toggleChildren(el, klass, t, cb = null, devault = true) {
+        debugger
+        el.children().each((child) => {
+            if (devault) $$(child).toggleClass(klass);
+            if (cb) cb(child, t);
+        })
     }
 
     renderChildrenInOrder(el, klass, t, cb = null, devault = true) {
         const dt = t / el.children().length;
         for (let i = 0; i < el.children().length; i++) {
             const childEl = el.children()[i];
-            const child = $(childEl);
+            const child = $$(childEl);
             if (devault) setTimeout(() => child.removeClass(klass), t);
             // if (cb) cb(child, t / child.children().length);
             if (cb) cb(child, t);
@@ -67,7 +75,7 @@ class Komponent {
         const dt = t / el.children().length;
         for (let i = 0; i < el.children().length; i++) {
             const child = el.children()[i];
-            const element = $(child);
+            const element = $$(child);
             // if ($(child).hasClass("hidden")) {
             if (element.children().length > 0) {
                 if (devault) () => element.removeClass(klass);
@@ -82,9 +90,8 @@ class Komponent {
     }
 }
 
-class Header extends Komponent {
-    constructor(options) {
-        super(options);
+class Header {
+    constructor() {
         this.header = $$("header.hidden");
     }
 
@@ -103,26 +110,29 @@ class Bar extends Komponent {
     }
 
     toggleForm() {
-        setTimeout(() => {
-            this.uploadButton.toggleClass("pressed");
-            this.uploadForm.toggleClass("hidden");
-        }, 100);
+        this.uploadButton.toggleClass("pressed");
+        // this.uploadForm.toggleClass("hidden");
+        this.uploadForm.toggleContainer();
     }
 
     toggle() {
         if (this.opened) {
-            this.uploadForm.children().each((child) => {
-                $$(child).toggleClass("hidden");
-            });
-            this.toggleForm();
+            this.uploadForm.toggleContent();
+            // this.uploadForm.children().each((child) => {
+            //     $$(child).toggleClass("hidden");
+            // });
+            setTimeout(() => this.toggleForm(), 80);
             this.opened = false;
         } else {
             this.toggleForm();
             setTimeout(() => {
-                this.uploadForm.children().each((child) => {
-                    $$(child).toggleClass("hidden");
-                })
-            }, 350);
+                this.uploadForm.toggleContent();                
+            }, 250);
+            // setTimeout(() => {
+            //     this.uploadForm.children().each((child) => {
+            //         $$(child).toggleClass("hidden");
+            //     })
+            // }, 250);
             this.opened = true;
         }
     }
@@ -136,11 +146,15 @@ class Bar extends Komponent {
 class UploadForm extends Komponent {
     constructor(options) {
         super(options);
-        this.form = $$("form.hidden");
+        this.form = $$("form.hidden");   
     }
 
-    render() {
-        
+    toggleContainer() {
+        this.form.toggleClass("hidden");
+    }
+    
+    toggleContent() {
+        this.toggleChildren(this.form, "hidden", 0);
     }
 }
 
