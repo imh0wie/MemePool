@@ -54,23 +54,33 @@
             <form class="hidden">
                 <div class="blanks hidden">
                     <p>Title</p>
-                    <input type="text" />
+                    <input type="text" class="title" />
                     <p>Upper text</p>
-                    <input type="text" />
+                    <textarea></textarea>
                     <p>Lower text</p>
-                    <input type="text" />
+                    <textarea></textarea>
                     <p>Tags</p>
-                    <input type="text" />
+                    <textarea></textarea>
+                    <input type="file" accept="image/*" class="file" />
                 </div>
                 <div class="preview hidden">
-                    <div id="canvas" class="two"></div>
-                    <input type="file" accept="image/*" >
-                    <button>Share</button>
+                    <canvas id="canvas"></canvas>
+                    <div class="buttons-container">
+                        <div class="step i">
+                            <div class="step-name one"><span>1</span><p>Preview</p></div>
+                            <button class="ready">Generate</button>
+                        </div>
+                        <div class="step ii">
+                            <div class="step-name two"><span>2</span><p>Upload</p></div>
+                            <button class="disabled">Share</button>
+                        </div>
+                    </div>
                 </div>
             </form>
             <div class="memes-container hidden">
                 <header><p class="hidden">#All</p></header>
             </div>
         </div>
+        <!-- <img src="" id="preview"> -->
     </body>
 </html>

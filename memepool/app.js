@@ -1,5 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
     const documentEl = $$(document);
+    const previewCanvas = document.getElementById("canvas");
+    const previewCtx = previewCanvas.getContext("2d");
+    const previewImg = document.getElementById("preview");
+    const file = document.querySelector(".content form .blanks .file").files[0];
     const bgBars = $$(".bg-bars").children();
     $$(function() {
         bgBars.each(bar => {
@@ -16,6 +20,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     const options = {
         documentEl: documentEl,
+        previewCanvas: previewCanvas,
+        previewCtx: previewCtx,
+        previewImg: previewImg,
+        file: file,
     };
     memepool = new MemePool(options);
     memepool.render();
@@ -32,6 +40,7 @@ class MemePool {
     render() {
         this.header.render();
         this.bar.render();
+        this.uploadForm.ready();
         this.memesContainer.render();
     }
 }
@@ -50,7 +59,6 @@ class Komponent {
     }
 
     toggleChildren(el, klass, t, cb = null, devault = true) {
-        debugger
         el.children().each((child) => {
             if (devault) $$(child).toggleClass(klass);
             if (cb) cb(child, t);
@@ -111,16 +119,12 @@ class Bar extends Komponent {
 
     toggleForm() {
         this.uploadButton.toggleClass("pressed");
-        // this.uploadForm.toggleClass("hidden");
         this.uploadForm.toggleContainer();
     }
 
     toggle() {
         if (this.opened) {
             this.uploadForm.toggleContent();
-            // this.uploadForm.children().each((child) => {
-            //     $$(child).toggleClass("hidden");
-            // });
             setTimeout(() => this.toggleForm(), 80);
             this.opened = false;
         } else {
@@ -128,11 +132,6 @@ class Bar extends Komponent {
             setTimeout(() => {
                 this.uploadForm.toggleContent();                
             }, 250);
-            // setTimeout(() => {
-            //     this.uploadForm.children().each((child) => {
-            //         $$(child).toggleClass("hidden");
-            //     })
-            // }, 250);
             this.opened = true;
         }
     }
@@ -146,7 +145,19 @@ class Bar extends Komponent {
 class UploadForm extends Komponent {
     constructor(options) {
         super(options);
-        this.form = $$("form.hidden");   
+        this.form = $$("form.hidden");
+        this.titleInput = $$(".content form .blanks title");
+        this.upperTextInput = $$(".content form .blanks upper-text");
+        this.lowerTextInput = $$(".content form .blanks lower-text");
+        this.tagsInput = $$(".content form .blanks tags");
+        this.preview = $$(".content form .preview");
+        this.fileInput = $$(".content form .preview input");
+        this.submitButton = $$(".content form .preview button");
+        this.previewCanvas = options.previewCanvas;
+        this.previewCtx = options.previewCtx;
+        // this.previewImg = options.previewImg;
+        this.file = options.file;
+        this.drawPreview = this.drawPreview.bind(this);
     }
 
     toggleContainer() {
@@ -155,6 +166,77 @@ class UploadForm extends Komponent {
     
     toggleContent() {
         this.toggleChildren(this.form, "hidden", 0);
+        // if (!this.reader) this.reader = new FileReader();
+        // this.reader.onload = () => {
+        debugger
+        if (!this.img) {
+            this.img = new Image(360, 480);
+            // this.img.onload = function() {
+            //     this.previewCtx.drawImage(this.img, 0, 0, 180, 240);
+            // }
+        }
+        this.img.src = this.file ? this.file : "./assets/images/default_meme.png";
+        debugger
+        this.drawPreview();
+        // };
+        // reader.readAsText(this.file);
+    }
+
+    handleUpload(e) {
+        this.previewCtx.clearRect(0, 0, 180, 240);
+        this.file = e.currentTarget.files[0];
+        const reader = new FileReader();
+        debugger
+        // reader.onloadend = function() {
+        //     debugger
+        //     this.img.src = reader.readAsDataURL(this.file);
+        //     debugger
+        // }.bind(this);
+        reader.addEventListener("load", function() {
+            debugger
+            this.img.src = reader.result;
+        }, false)
+        debugger
+        this.drawPreview();
+        // reader.addEventListener("load", function() {
+        //     this.previewImg.src = reader.result;
+        // }, false)
+        // if (this.file) {
+        //     debugger
+        //     reader.readAsDataURL(this.file);
+        //     debugger
+        // }
+    }
+
+    drawPreview() {
+        // debugger        
+        // this.previewImg = new Image(360, 480);
+        this.previewCanvas.width = 180;
+        this.previewCanvas.height = 240;
+        // this.previewCtx.clearRect(0, 0, 180, 240);
+        this.previewCtx.drawImage(this.img, 0, 0, 180, 240);
+        debugger
+        // if (this.file) {
+        //     debugger
+        //     if (source) this.previewImg.src = source;
+        //     this.previewCtx.drawImage(this.previewImg, 0, 0);
+        // } else {
+        //     debugger
+        //     this.previewImg = new Image();
+        //     this.previewImg.src = "./assets/images/default_meme.png";
+        //     debugger
+        // }
+
+    }
+
+    ready() {
+        this.titleInput.on("change", (e) => this.title = e.currentTarget.value());
+        this.upperTextInput.on("change", (e) => this.upperText = e.currentTarget.value());
+        this.lowerTextInput.on("change", (e) => this.lowerText = e.currentTarget.value());
+        this.tagsInput.on("change", (e) => this.tags = e.currentTarget.value().split(" "));
+        this.fileInput.on("change", (e) => this.handleUpload(e));
+        debugger
+        // this.drawPreview();
     }
 }
 
@@ -173,5 +255,6 @@ class MemesContainer extends Komponent {
                 node.children().each((child) => $$(child).removeClass("hidden"))
             }, 1000);
         })
+
     }
 }
