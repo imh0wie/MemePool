@@ -207,7 +207,7 @@ header {
 .content form {
     display: flex;
     background-color: rgba(164, 132, 255, 0.6);
-    width: 500px;
+    width: 510px;
     /* height: 340px; */
     transition: all 0.4s ease;
 }
@@ -264,7 +264,7 @@ header {
 
 .content form .preview {
     width: 100%;
-    margin: 0 15px;
+    margin: 10px 15px;
     transition: all 0.4s ease;
 }
 
@@ -272,15 +272,19 @@ header {
     transition: all 0.1s ease;
 }
 
-.content form .preview #canvas{
-    /* width: 180px; */
-    /* height: 240px; */
+.content form .preview #canvas {
     display: block;
-    margin: 15px auto;
-    /* margin-top: 15px; */
-    /* background-color: #f2f2f2; */
+    margin: 0 auto;
 }
 
+.content form .preview img {
+    display: block;
+    margin: 0px auto;
+}
+
+.none {
+    display: none!important;
+}
 /* .content form .preview input {
     display: block;
     margin: 0px 0px 0px 60px;
@@ -290,8 +294,8 @@ header {
 .content form .preview .buttons-container {
     display: flex;
     justify-content: space-between;
-    width: 160px;
-    margin: 0 auto;
+    /* width: 160px; */
+    margin: 10px 5px;
 }
 
 .content form .preview .buttons-container .step {
