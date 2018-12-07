@@ -147,8 +147,10 @@ class UploadForm extends Komponent {
         super(options);
         this.form = $$("form.hidden");
         this.titleInput = $$(".content form .blanks title");
-        this.upperTextInput = $$(".content form .blanks upper-text");
-        this.lowerTextInput = $$(".content form .blanks lower-text");
+        this.upperTextInput = $$(".content form .blanks .upper-text");
+        this.upperText = "";
+        this.lowerTextInput = $$(".content form .blanks .lower-text");
+        this.lowerText = "";
         this.tagsInput = $$(".content form .blanks tags");
         this.fileInput = $$(".content form .blanks input");
         this.preview = $$(".content form .preview");
@@ -196,17 +198,14 @@ class UploadForm extends Komponent {
         this.previewCtx.clearRect(0, 0, 180, 280);
         this.file = e.currentTarget.files[0];
         const reader = new FileReader();
-        debugger
         // reader.onloadend = function() {
         //     debugger
         //     this.img.src = reader.readAsDataURL(this.file);
         //     debugger
         // }.bind(this);
         reader.addEventListener("load", function() {
-            debugger
             this.img.src = reader.result;
         }, false)
-        debugger
         this.drawPreview();
         // reader.addEventListener("load", function() {
         //     this.previewImg.src = reader.result;
@@ -225,7 +224,21 @@ class UploadForm extends Komponent {
         this.previewCanvas.height = 280;
         this.previewCtx.clearRect(0, 0, 180, 280);
         this.previewCtx.drawImage(this.img, 0, 0, 180, 280);
+        this.fontSize = this.previewCanvas.width / 9;
         debugger
+        this.previewCtx.font = `${this.fontSize}px Impact`;
+        this.previewCtx.fillStyle = "#fff";
+        this.previewCtx.strokeStyle = "#333";
+        this.previewCtx.lineWidth = this.fontSize / 15;
+        this.previewCtx.textAlign = "center";
+
+        this.previewCtx.textBaseline = "top";
+        this.previewCtx.fillText(this.upperText, this.previewCanvas.width / 2, 0, this.previewCanvas.width);
+        this.previewCtx.strokeText(this.upperText, this.previewCanvas.width / 2, 0, this.previewCanvas.width);
+
+        this.previewCtx.textBaseline = "bottom";
+        this.previewCtx.fillText(this.lowerText, this.previewCanvas.width / 2, this.previewCanvas.height, this.previewCanvas.width);
+        this.previewCtx.strokeText(this.lowerText, this.previewCanvas.width / 2, this.previewCanvas.height, this.previewCanvas.width);
         // if (this.file) {
         //     debugger
         //     if (source) this.previewImg.src = source;
@@ -239,10 +252,12 @@ class UploadForm extends Komponent {
     }
 
     ready() {
-        this.titleInput.on("change", (e) => this.title = e.currentTarget.value());
-        this.upperTextInput.on("change", (e) => this.upperText = e.currentTarget.value());
-        this.lowerTextInput.on("change", (e) => this.lowerText = e.currentTarget.value());
-        this.tagsInput.on("change", (e) => this.tags = e.currentTarget.value().split(" "));
+        this.titleInput.on("change", (e) => this.title = e.currentTarget.value.toUpperCase());
+        this.upperTextInput.on("change", (e) => {
+            this.upperText = e.currentTarget.value.toUpperCase();
+        });
+        this.lowerTextInput.on("change", (e) => this.lowerText = e.currentTarget.value.toUpperCase());
+        this.tagsInput.on("change", (e) => this.tags = e.currentTarget.value.toUpperCase().split(" "));
         this.fileInput.on("change", (e) => this.handleUpload(e));
         this.previewButton.on("click", (e) => {
             e.preventDefault();
@@ -259,7 +274,6 @@ class UploadForm extends Komponent {
         if (this.file) this.submitButton.on("click", () => {
             console.log("Submitted!");
         })
-        debugger
         // this.drawPreview();
     }
 }
