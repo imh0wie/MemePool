@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const previewCtx = previewCanvas.getContext("2d");
     const previewImg = document.getElementById("default-meme");
     const file = document.querySelector(".content form .blanks .file").files[0];
+    const fileInputEl = document.querySelector(".content form .blanks input");
     const bgBars = $$(".bg-bars").children();
     $$(function() {
         bgBars.each(bar => {
@@ -24,6 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
         previewCtx: previewCtx,
         previewImg: previewImg,
         file: file,
+        fileInputEl: fileInputEl,
     };
     memepool = new MemePool(options);
     memepool.render();
@@ -153,11 +155,12 @@ class UploadForm extends Komponent {
         this.lowerText = "";
         this.tagsInput = $$(".content form .blanks tags");
         this.fileInput = $$(".content form .blanks input");
+        this.fileInputEl = options.fileInputEl;
         this.preview = $$(".content form .preview");
         this.canvas = $$(".content form .preview canvas");
         this.defaultMeme = $$(".content form .preview img");
         this.previewButton = $$(".content form .preview .buttons-container .step.i button");
-        this.submitButton = $$(".content form .preview .buttons-container .step.iI button");
+        this.submitButton = $$(".content form .preview .buttons-container .step.ii button");
         this.previewCanvas = options.previewCanvas;
         this.previewCtx = options.previewCtx;
         // this.previewImg = options.previewImg;
@@ -206,7 +209,7 @@ class UploadForm extends Komponent {
         reader.addEventListener("load", function() {
             this.img.src = reader.result;
         }, false)
-        this.drawPreview();
+        // this.drawPreview();
         // reader.addEventListener("load", function() {
         //     this.previewImg.src = reader.result;
         // }, false)
@@ -272,12 +275,23 @@ class UploadForm extends Komponent {
                 this.canvas.removeClass("none");
                 this.defaultMeme.addClass("none");
                 this.drawPreview();
+                this.submitButton.removeClass("disabled");
+                this.submitButton.addClass("ready");
+                this.fileInputEl.value = this.file.name.slice(0, -4);
+                this.title = this.file.name.slice(0, -4);
+                console.log(this.title);
+                console.log(this.fileInputEl.value);
             }
             reader.readAsDataURL(this.file);
         })
-        if (this.file) this.submitButton.on("click", () => {
-            console.log("Submitted!");
-        })
+        this.submitButton.on("click", (e) => {
+            e.preventDefault();
+            if (this.file) {
+                console.log("Submitted!");
+            } else {
+                console.log("No file uploaded yet");
+            }
+        });
         // this.drawPreview();
     }
 }
