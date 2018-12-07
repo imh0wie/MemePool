@@ -233,12 +233,16 @@ class UploadForm extends Komponent {
         this.previewCtx.textAlign = "center";
 
         this.previewCtx.textBaseline = "top";
-        this.previewCtx.fillText(this.upperText, this.previewCanvas.width / 2, 0, this.previewCanvas.width);
-        this.previewCtx.strokeText(this.upperText, this.previewCanvas.width / 2, 0, this.previewCanvas.width);
+        this.upperText.split("\n").forEach((line, i) => {
+            this.previewCtx.fillText(line, this.previewCanvas.width / 2, i * this.fontSize, this.previewCanvas.width);
+            this.previewCtx.strokeText(line, this.previewCanvas.width / 2, i * this.fontSize, this.previewCanvas.width);
+        })
 
-        this.previewCtx.textBaseline = "bottom";
-        this.previewCtx.fillText(this.lowerText, this.previewCanvas.width / 2, this.previewCanvas.height, this.previewCanvas.width);
-        this.previewCtx.strokeText(this.lowerText, this.previewCanvas.width / 2, this.previewCanvas.height, this.previewCanvas.width);
+        this.previewCtx.textBaseline = "middle";
+        this.lowerText.split("\n").forEach((line, i) => {
+            this.previewCtx.fillText(line, this.previewCanvas.width / 2, this.previewCanvas.height - (this.lowerText.split("\n").length - i) * this.fontSize, this.previewCanvas.width);
+            this.previewCtx.strokeText(line, this.previewCanvas.width / 2, this.previewCanvas.height - (this.lowerText.split("\n").length - i) * this.fontSize, this.previewCanvas.width);
+        })
         // if (this.file) {
         //     debugger
         //     if (source) this.previewImg.src = source;
