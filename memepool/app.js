@@ -114,7 +114,7 @@ class Bar extends Komponent {
     constructor(options) {
         super(options);
         this.bar = $$(".bar.hidden")
-        this.uploadButton = $$(".add-button");
+        this.uploadButton = $$(".bar .inner-bar .add-button");
         this.uploadForm = options.uploadForm;
         this.opened = false;
     }
@@ -147,7 +147,7 @@ class Bar extends Komponent {
 class UploadForm extends Komponent {
     constructor(options) {
         super(options);
-        this.form = $$("form.hidden");
+        this.form = $$(".content form.hidden");
         this.titleInput = $$(".content form .blanks label .title");
         this.upperTextInput = $$(".content form .blanks label .upper-text");
         this.upperText = "";
@@ -184,35 +184,23 @@ class UploadForm extends Komponent {
         }
         this.toggleChildren(this.form, "hidden", 0);
         this.ready();
-        // if (!this.reader) this.reader = new FileReader();
-        // this.reader.onload = () => {
-        // if (!this.img) {
-            // this.img = new Image(360, 480);
-            // this.img.onload = function() {
-            //     this.previewCtx.drawImage(this.img, 0, 0, 180, 280);
-            // }
-        // }
-        // this.img.src = this.file ? this.file : "./assets/images/default_meme.png";
-        // debugger
-        // this.drawPreview();
-        // };
-        // reader.readAsText(this.file);
     }
 
     handleTags(e) {
         e.preventDefault();
-        if (!this.tagsInput.val()) return;
-        if (!this.title) this.title = [];
-        this.title.push(this.tagsInput.val().toLowerCase());
-        debugger
-        this.tagsContainer.append(`<p class="tag"><span class="tag-name">#${this.tagsInput.val().toLowerCase()}</span><span class="cross">X</span></p>`)
-        debugger
-        // if (this.title.length === 1 && e.currentTarget.value.includes(" ")) {
-        //     this.tagsInput.append()
-        // } else {
+        if (!this.tags) this.tags = [];
+        if (!this.tagsInput.val() || this.tags.includes(this.tagsInput.val().toLowerCase())) return;
+        this.tags.push(this.tagsInput.val().toLowerCase());
+        this.tagsContainer.append(`<p class="tag"><span class="tag-name">#${this.tagsInput.val().toLowerCase()}</span><span class="cross">X</span></p>`);
+        this.ready();
+    }
 
-        // }
-        // this.tagsInput.append()
+    removeTags(e, tag) {
+        e.preventDefault();
+        const tagName = $$(tag.parent().children().nodes[0]).html().slice(1);
+        const tagNameIdx = this.tags.indexOf(tagName);
+        this.tags.splice(tagNameIdx, 1);
+        tag.parent().remove();
     }
 
     handleUpload(e) {
@@ -237,8 +225,6 @@ class UploadForm extends Komponent {
             this.submitButton.addClass("ready");
             this.fileInputEl.value = this.file.name.slice(0, -4);
             this.title = this.file.name.slice(0, -4);
-            console.log(this.title);
-            console.log(this.fileInputEl.value);
         }
         reader.readAsDataURL(this.file);
     } 
@@ -249,7 +235,6 @@ class UploadForm extends Komponent {
         this.previewCtx.clearRect(0, 0, 180, 280);
         this.previewCtx.drawImage(this.img, 0, 0, 180, 280);
         this.fontSize = this.previewCanvas.width / 9;
-        debugger
         this.previewCtx.font = `${this.fontSize}px Impact`;
         this.previewCtx.fillStyle = "#fff";
         this.previewCtx.strokeStyle = "#333";
@@ -271,24 +256,46 @@ class UploadForm extends Komponent {
 
     handleSubmit(e) {
         e.preventDefault();
+        debugger
+        if (!this.file) return;
         this.formStatus = {
             title: false,
             upperText: false,
             lowerText: false,
             tags: false,
         };
-        if (this.title.includes("\\") || this.title.includes("?") || this.title.includes("%") || this.title.includes("*")) {
+        if (!this.title || this.title.includes("\\") || this.title.includes("?") || this.title.includes("%") || this.title.includes("*")) {
             this.titleInput.addClass("input-error");
-            if (!this.titleMsg) this.titleMsg = $$(".content form .blanks .title-container .msg");
-            this.titleMsg.html('Title cannot contain "\", "?", "%" or "*".');
+            if (!this.titleMsg) this.titleMsg = $$(".content form .blanks .title-field .msg");
+            this.titleMsg.html('Invalid characters: \\ ? % *');
+            debugger
         } else {
             this.titleInput.removeClass("input-error");
             this.formStatus["title"] = true;
         }
+        if (!this.upperText && !this.lowerText) {
+            this.upperTextInput.addClass("input-error");
+            this.lowerTextInput.addClass("input-error");
+            if (!this.upperTextMsg) this.upperTextMsg = $$(".content form .blanks .upper-text-field .msg");
+            if (!this.lowerTextMsg) this.lowerTextMsg = $$(".content form .blanks .lower-text-field .msg");
+            this.upperTextMsg.html('1 field needs to be filled.');
+            this.lowerTextMsg.html('1 field needs to be filled.');
+            this.formStatus["upperText"] = true;
+            this.formStatus["lowerText"] = true;
+        }
+        debugger
+        if (!this.tags || this.tags.length === 0) {
+            this.tagsInput.addClass("input-error");            
+            if (!this.tagsMsg) this.tagsMsg = $$(".content form .blanks .tags-field .msg");
+            this.tagsMsg.html("At least 1 tag required")
+        } else {
+            this.tagsInput.removeClass("input-error");
+            this.formStatus["title"] = true;
+        }
 
-        this.fileName = this.title.toLowerCase().split(" ").join("-");
-        this.fileType = this.file.name.split("").reverse().slice(0, 4).reverse().join("");
-        let storageRef = firebase.storage().ref(`/memes/${this.fileName}${this.fileType}`);
+        // this.fileName = this.title.toLowerCase().split(" ").join("-");
+        // this.fileType = this.file.name.split("").reverse().slice(0, 4).reverse().join("");
+        // let storageRef = firebase.storage().ref(`/memes/${this.fileName}${this.fileType}`);
     }
 
     ready() {
@@ -297,16 +304,11 @@ class UploadForm extends Komponent {
         this.lowerTextInput.on("change", (e) => this.lowerText = e.currentTarget.value.toUpperCase());
         this.tagsButton.off('click');
         this.tagsButton.on("click", (e) => this.handleTags(e));
+        this.tagsRemovers = $$(".content form .blanks label .tags-container .tag .cross");
+        this.tagsRemovers.each((remover) => $$(remover).on("click", (e) => this.removeTags(e, $$(remover))));
         this.fileInput.on("change", (e) => this.handleUpload(e));
         this.previewButton.on("click", (e) => this.handlePreview(e));
-        this.submitButton.on("click", (e) => {
-            e.preventDefault();
-            if (this.file) {
-                console.log("Submitted!");
-            } else {
-                console.log("No file uploaded yet");
-            }
-        });
+        this.submitButton.on("click", (e) => this.handleSubmit(e));
         // this.drawPreview();
     }
 }
