@@ -148,13 +148,14 @@ class UploadForm extends Komponent {
     constructor(options) {
         super(options);
         this.form = $$("form.hidden");
-        this.titleInput = $$(".content form .blanks label title");
+        this.titleInput = $$(".content form .blanks label .title");
         this.upperTextInput = $$(".content form .blanks label .upper-text");
         this.upperText = "";
         this.lowerTextInput = $$(".content form .blanks label .lower-text");
         this.lowerText = "";
         this.tagsInput = $$(".content form .blanks label .tags");
-        this.tagsButton = $$(".content form .blanks label .add-button");
+        this.tagsButton = $$(".content form .blanks label .input-container .add-button");
+        this.tagsContainer = $$(".content form .blanks label .tags-container");
         this.fileInput = $$(".content form .blanks .file");
         this.fileInputEl = options.fileInputEl;
         this.preview = $$(".content form .preview");
@@ -200,9 +201,12 @@ class UploadForm extends Komponent {
 
     handleTags(e) {
         e.preventDefault();
+        if (!this.tagsInput.val()) return;
+        if (!this.title) this.title = [];
+        this.title.push(this.tagsInput.val().toLowerCase());
         debugger
-        this.title = [];
-
+        this.tagsContainer.append(`<p class="tag"><span class="tag-name">#${this.tagsInput.val().toLowerCase()}</span><span class="cross">X</span></p>`)
+        debugger
         // if (this.title.length === 1 && e.currentTarget.value.includes(" ")) {
         //     this.tagsInput.append()
         // } else {
@@ -291,7 +295,8 @@ class UploadForm extends Komponent {
         this.titleInput.on("change", (e) => this.title = e.currentTarget.value.toUpperCase());
         this.upperTextInput.on("change", (e) => this.upperText = e.currentTarget.value.toUpperCase());
         this.lowerTextInput.on("change", (e) => this.lowerText = e.currentTarget.value.toUpperCase());
-        this.tagsButton.on("submit", (e) => this.handleTags(e));
+        this.tagsButton.off('click');
+        this.tagsButton.on("click", (e) => this.handleTags(e));
         this.fileInput.on("change", (e) => this.handleUpload(e));
         this.previewButton.on("click", (e) => this.handlePreview(e));
         this.submitButton.on("click", (e) => {

@@ -304,15 +304,34 @@ header {
 }
 
 .content form .blanks label .tags-container {
-
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
 }
 
-.content form .blanks label .tags-container p {
-
+.content form .blanks label .tags-container .tag {
+    background: #333;
+    color: #fff;
+    font-size: 10px;
+    margin: 0;
+    padding: 2px 6px;
+    border: 1px solid #fff;
+    border-radius: 10px;
+    clear: both;
+    float: left;
 }
 
 .content form .blanks label .tags-container p span {
+    padding: 0 3px;
+}
 
+.content form .blanks label .tags-container p .tag-name {
+    border-right: 1px solid #fff;
+}
+
+.content form .blanks label .tags-container p .cross:hover {
+    color: #999;
+    cursor: pointer;
 }
 
 .content form .blanks .file {
