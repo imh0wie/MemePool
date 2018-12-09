@@ -148,13 +148,14 @@ class UploadForm extends Komponent {
     constructor(options) {
         super(options);
         this.form = $$("form.hidden");
-        this.titleInput = $$(".content form .blanks title");
-        this.upperTextInput = $$(".content form .blanks .upper-text");
+        this.titleInput = $$(".content form .blanks label title");
+        this.upperTextInput = $$(".content form .blanks label .upper-text");
         this.upperText = "";
-        this.lowerTextInput = $$(".content form .blanks .lower-text");
+        this.lowerTextInput = $$(".content form .blanks label .lower-text");
         this.lowerText = "";
-        this.tagsInput = $$(".content form .blanks tags");
-        this.fileInput = $$(".content form .blanks input");
+        this.tagsInput = $$(".content form .blanks label .tags");
+        this.tagsButton = $$(".content form .blanks label .add-button");
+        this.fileInput = $$(".content form .blanks .file");
         this.fileInputEl = options.fileInputEl;
         this.preview = $$(".content form .preview");
         this.canvas = $$(".content form .preview canvas");
@@ -197,32 +198,48 @@ class UploadForm extends Komponent {
         // reader.readAsText(this.file);
     }
 
+    handleTags(e) {
+        e.preventDefault();
+        debugger
+        this.title = [];
+
+        // if (this.title.length === 1 && e.currentTarget.value.includes(" ")) {
+        //     this.tagsInput.append()
+        // } else {
+
+        // }
+        // this.tagsInput.append()
+    }
+
     handleUpload(e) {
         this.previewCtx.clearRect(0, 0, 180, 280);
         this.file = e.currentTarget.files[0];
         const reader = new FileReader();
-        // reader.onloadend = function() {
-        //     debugger
-        //     this.img.src = reader.readAsDataURL(this.file);
-        //     debugger
-        // }.bind(this);
         reader.addEventListener("load", function() {
             this.img.src = reader.result;
         }, false)
-        // this.drawPreview();
-        // reader.addEventListener("load", function() {
-        //     this.previewImg.src = reader.result;
-        // }, false)
-        // if (this.file) {
-        //     debugger
-        //     reader.readAsDataURL(this.file);
-        //     debugger
-        // }
     }
 
+    handlePreview(e) {
+        e.preventDefault();
+        const reader = new FileReader();
+        reader.onload = () => {
+            this.img = new Image(180, 280);
+            this.img.src = reader.result;
+            this.canvas.removeClass("none");
+            this.defaultMeme.addClass("none");
+            this.drawPreview();
+            this.submitButton.removeClass("disabled");
+            this.submitButton.addClass("ready");
+            this.fileInputEl.value = this.file.name.slice(0, -4);
+            this.title = this.file.name.slice(0, -4);
+            console.log(this.title);
+            console.log(this.fileInputEl.value);
+        }
+        reader.readAsDataURL(this.file);
+    } 
+
     drawPreview() {
-        // debugger        
-        // this.previewImg = new Image(360, 480);
         this.previewCanvas.width = 180;
         this.previewCanvas.height = 280;
         this.previewCtx.clearRect(0, 0, 180, 280);
@@ -246,44 +263,37 @@ class UploadForm extends Komponent {
             this.previewCtx.fillText(line, this.previewCanvas.width / 2, this.previewCanvas.height - (this.lowerText.split("\n").length - i) * this.fontSize, this.previewCanvas.width);
             this.previewCtx.strokeText(line, this.previewCanvas.width / 2, this.previewCanvas.height - (this.lowerText.split("\n").length - i) * this.fontSize, this.previewCanvas.width);
         })
-        // if (this.file) {
-        //     debugger
-        //     if (source) this.previewImg.src = source;
-        //     this.previewCtx.drawImage(this.previewImg, 0, 0);
-        // } else {
-        //     debugger
-        //     this.previewImg = new Image();
-        //     this.previewImg.src = "./assets/images/default_meme.png";
-        //     debugger
-        // }
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+        this.formStatus = {
+            title: false,
+            upperText: false,
+            lowerText: false,
+            tags: false,
+        };
+        if (this.title.includes("\\") || this.title.includes("?") || this.title.includes("%") || this.title.includes("*")) {
+            this.titleInput.addClass("input-error");
+            if (!this.titleMsg) this.titleMsg = $$(".content form .blanks .title-container .msg");
+            this.titleMsg.html('Title cannot contain "\", "?", "%" or "*".');
+        } else {
+            this.titleInput.removeClass("input-error");
+            this.formStatus["title"] = true;
+        }
+
+        this.fileName = this.title.toLowerCase().split(" ").join("-");
+        this.fileType = this.file.name.split("").reverse().slice(0, 4).reverse().join("");
+        let storageRef = firebase.storage().ref(`/memes/${this.fileName}${this.fileType}`);
     }
 
     ready() {
         this.titleInput.on("change", (e) => this.title = e.currentTarget.value.toUpperCase());
-        this.upperTextInput.on("change", (e) => {
-            this.upperText = e.currentTarget.value.toUpperCase();
-        });
+        this.upperTextInput.on("change", (e) => this.upperText = e.currentTarget.value.toUpperCase());
         this.lowerTextInput.on("change", (e) => this.lowerText = e.currentTarget.value.toUpperCase());
-        this.tagsInput.on("change", (e) => this.tags = e.currentTarget.value.toUpperCase().split(" "));
+        this.tagsButton.on("submit", (e) => this.handleTags(e));
         this.fileInput.on("change", (e) => this.handleUpload(e));
-        this.previewButton.on("click", (e) => {
-            e.preventDefault();
-            const reader = new FileReader();
-            reader.onload = () => {
-                this.img = new Image(180, 280);
-                this.img.src = reader.result;
-                this.canvas.removeClass("none");
-                this.defaultMeme.addClass("none");
-                this.drawPreview();
-                this.submitButton.removeClass("disabled");
-                this.submitButton.addClass("ready");
-                this.fileInputEl.value = this.file.name.slice(0, -4);
-                this.title = this.file.name.slice(0, -4);
-                console.log(this.title);
-                console.log(this.fileInputEl.value);
-            }
-            reader.readAsDataURL(this.file);
-        })
+        this.previewButton.on("click", (e) => this.handlePreview(e));
         this.submitButton.on("click", (e) => {
             e.preventDefault();
             if (this.file) {

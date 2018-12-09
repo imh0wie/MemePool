@@ -53,14 +53,27 @@
         <div class="content">
             <form class="hidden">
                 <div class="blanks hidden">
-                    <p>Title</p>
-                    <input type="text" class="title" />
-                    <p>Upper text</p>
-                    <textarea class="upper-text"></textarea>
-                    <p>Lower text</p>
-                    <textarea class="lower-text"></textarea>
-                    <p>Tags</p>
-                    <textarea class="tags"></textarea>
+                    <label>
+                        <div class="input-name"><p class="name">Title</p><p class="msg"></p></div>
+                        <input type="text" class="title" />
+                    </label>
+                    <label>
+                        <div class="input-name"><p class="name">Upper text</p><p class="msg"></p></div>
+                        <textarea class="upper-text"></textarea>                        
+                    </label>
+                    <label>
+                        <div class="input-name"><p class="name">Lower text</p><p class="msg"></p></div>
+                        <textarea class="lower-text"></textarea>                        
+                    </label>
+                    <label>
+                        <div class="input-name"><p class="name">Tags</p><p class="msg"></p></div>
+                        <div class="input-container">
+                            <input type="text" class="tags" />
+                            <input type="submit" class="add-button" value="+">
+                        </div>
+                        <div class="tags-container"></div>
+                        <!-- <textarea class="tags"></textarea> -->
+                    </label>
                     <input type="file" accept="image/*" class="file" />
                 </div>
                 <div class="preview hidden">

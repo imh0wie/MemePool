@@ -17,6 +17,11 @@
     height: 480px;
 }
 
+.input-error {
+    border: 1px solid red;
+    transition: all 0.4s ease;
+}
+
 body {
     background-color: #fff;
 }
@@ -84,6 +89,15 @@ body {
     width: 0;
 }
 
+.add-button {
+    border: 1px solid #f2f2f2;
+    border-radius: 50%;
+    margin: 0;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.1s ease;
+}
+
 header {
     opacity: 1;
     transition: all 0.4s ease;
@@ -126,13 +140,7 @@ header {
     color: #a484ff;
     font-size: 35px;
     font-weight: bold;
-    border: 1px solid #f2f2f2;
-    border-radius: 50%;
-    margin: 0;
     margin-right: 10px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.1s ease;
 }
 
 .inner-bar .add-button:hover {
@@ -228,12 +236,29 @@ header {
     transition: all 0.1s ease;
 }
 
-.content form .blanks p {
-    font-size: 15px;
-    margin: 15px 0 0 0;
+.content form .blanks label {
+    display: block;
+    margin: 15px 0;
 }
 
-.content form .blanks input {
+.content form .blanks label .input-name {
+    display: flex;
+}
+
+.content form .blanks label .input-name .name {
+    font-size: 15px;
+    margin: 0;
+    /* margin: 15px 0 0 0; */
+}
+
+.content form .blanks label .input-name .msg {
+    color: #333;
+    font-size: 12px;
+    margin: 0;
+    /* margin: 15px 0 0 0; */
+}
+
+.content form .blanks label input {
     display: block;
     width: 150px;
     height: 20px;
@@ -243,7 +268,7 @@ header {
     margin: 5px 0 0 0;
 }
 
-.content form .blanks textarea {
+.content form .blanks label textarea {
     display: block;
     width: 150px;
     height: 30px;
@@ -253,6 +278,41 @@ header {
     font-family: 'Fjalla One', sans-serif;
     margin: 5px 0 0 0;
     resize: vertical;
+}
+
+.content form .blanks label .input-container {
+    display: flex;
+}
+
+.content form .blanks label .input-container input {
+    width: 75px;
+    margin-right: 10px;
+}
+
+.content form .blanks label .input-container .add-button {
+    display: block;
+    width: 18px;
+    height: 18px;
+    margin: auto 0;
+    padding: 0px 0px 0px 0px;
+    color: white;
+    background: #00dc00;
+}
+
+.content form .blanks label .input-container .add-button:hover {
+
+}
+
+.content form .blanks label .tags-container {
+
+}
+
+.content form .blanks label .tags-container p {
+
+}
+
+.content form .blanks label .tags-container p span {
+
 }
 
 .content form .blanks .file {
