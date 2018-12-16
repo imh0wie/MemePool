@@ -256,7 +256,6 @@ class UploadForm extends Komponent {
 
     handleSubmit(e) {
         e.preventDefault();
-        debugger
         if (!this.file) return;
         this.formStatus = {
             title: false,
@@ -268,10 +267,10 @@ class UploadForm extends Komponent {
             this.titleInput.addClass("input-error");
             if (!this.titleMsg) this.titleMsg = $$(".content form .blanks .title-field .msg");
             this.titleMsg.html('Invalid characters: \\ ? % *');
-            debugger
         } else {
             this.titleInput.removeClass("input-error");
             this.formStatus["title"] = true;
+            if (this.titleMsg) this.titleMsg.html(" ");
         }
         if (!this.upperText && !this.lowerText) {
             this.upperTextInput.addClass("input-error");
@@ -280,22 +279,73 @@ class UploadForm extends Komponent {
             if (!this.lowerTextMsg) this.lowerTextMsg = $$(".content form .blanks .lower-text-field .msg");
             this.upperTextMsg.html('1 field needs to be filled.');
             this.lowerTextMsg.html('1 field needs to be filled.');
-            this.formStatus["upperText"] = true;
-            this.formStatus["lowerText"] = true;
         }
-        debugger
+        if (this.upperText) {
+            this.formStatus["upperText"] = true;
+            this.upperTextInput.removeClass("input-error");
+            if (this.upperTextMsg) this.upperTextMsg.html(" ");
+        }
+        if (this.lowerText) {
+            this.formStatus["lowerText"] = true;
+            this.lowerTextInput.removeClass("input-error");
+            if (this.lowerTextMsg) this.lowerTextMsg.html(" ");
+        }
         if (!this.tags || this.tags.length === 0) {
             this.tagsInput.addClass("input-error");            
             if (!this.tagsMsg) this.tagsMsg = $$(".content form .blanks .tags-field .msg");
             this.tagsMsg.html("At least 1 tag required")
         } else {
             this.tagsInput.removeClass("input-error");
-            this.formStatus["title"] = true;
+            this.formStatus["tags"] = true;
+            if (this.tagsMsg) this.tagsMsg.html(" ");
+        }
+        const counter = 0;
+        for (let key in this.formStatus) {
+            if (!this.formStatus[key] && (key !== "upperText" || key !== "lowerText")) return; // title and tags required
+            if (!this.formStatus[key] && key === "upperText") {
+                counter += 1;
+            } else if (!this.formStatus[key] && key === "lowerText" && counter > 0) {
+                return;
+            }
         }
 
-        // this.fileName = this.title.toLowerCase().split(" ").join("-");
-        // this.fileType = this.file.name.split("").reverse().slice(0, 4).reverse().join("");
-        // let storageRef = firebase.storage().ref(`/memes/${this.fileName}${this.fileType}`);
+        this.fileName = this.title.toLowerCase().split(" ").join("-");
+        this.fileType = this.file.name.split("").reverse().slice(0, 4).reverse().join("");
+        this.meme = this.file;
+        const storageRef = firebase.storage().ref(); // /memes/${this.fileName}${this.fileType}
+        const memeRef = storageRef.child(`${this.fileName}${this.fileType}`);
+        // let dataRef = firebase.database().ref("memes");
+        debugger
+        memeRef.put(this.meme).then(function(snapshot) {
+            debugger
+            const url = snapshot.downloadURL;
+            console.log(url);
+        })
+        // let storageRef = firebase.storage().ref(); 
+        // let uploadTask = storageRef.put(this.meme);
+        // debugger
+        // uploadTask.on("state_changed", function(snapshot) {
+
+        // }, function(error) {
+            
+        // }, function() {
+        //     console.log(url);
+        //     let memeKey = firebase.database().ref("/memes/").push().key;
+        //     let url = uploadTask.snapshot.downloadURL;
+        //     let updates = {};
+        //     let memeData = {
+        //         title: this.title,
+        //         upperText: this.upperText,
+        //         lowerText: this.lowerText,
+        //         tags: this.tags,
+        //         url: url,
+        //     }
+        //     debugger
+        //     updates[`/memes/${memeKey}`] = memeData;
+        //     debugger
+        //     firebase.database().ref().update(updates);
+        //     debugger
+        // })
     }
 
     ready() {
