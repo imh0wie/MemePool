@@ -214,19 +214,25 @@ class UploadForm extends Komponent {
 
     handlePreview(e) {
         e.preventDefault();
-        const reader = new FileReader();
-        reader.onload = () => {
-            this.img = new Image(180, 280);
-            this.img.src = reader.result;
-            this.canvas.removeClass("none");
-            this.defaultMeme.addClass("none");
-            this.drawPreview();
-            this.submitButton.removeClass("disabled");
-            this.submitButton.addClass("ready");
-            this.fileInputEl.value = this.file.name.slice(0, -4);
-            this.title = this.file.name.slice(0, -4);
+        if (this.file) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                this.img = new Image(180, 280);
+                this.img.src = reader.result;
+                this.canvas.removeClass("none");
+                this.defaultMeme.addClass("none");
+                this.drawPreview();
+                this.submitButton.removeClass("disabled");
+                this.submitButton.addClass("ready");
+                if (!this.fileInputEl.value) {
+                    this.fileInputEl.value = this.file.name.slice(0, -4);
+                    this.title = this.file.name.slice(0, -4);
+                }
+            }
+            reader.readAsDataURL(this.file);
+        } else {
+            console.log("No file found");
         }
-        reader.readAsDataURL(this.file);
     } 
 
     drawPreview() {
@@ -311,16 +317,37 @@ class UploadForm extends Komponent {
 
         this.fileName = this.title.toLowerCase().split(" ").join("-");
         this.fileType = this.file.name.split("").reverse().slice(0, 4).reverse().join("");
-        this.meme = this.file;
+        // const newInput = document.createElement("input");
+        // newInput.setAttribute("type", "file");
+        // this.meme = new Blob([this.previewCanvas.toDataURL()], {
+            // type: this.file.type,
+            // lastModified: Date.now(),
+        //   });
+        // this.previewCanvas.toBlob(blob => {
+            // const newImg = document.createElement('img');
+            // debugger
+            // this.meme = blob;
+            // this.meme = URL.createObjectURL(blob);
+            // newImg.onload = function() {
+                // no longer need to read the blob so it's revoked
+                // URL.revokeObjectURL(url);
+            // };
+            // newImg.src = url;
+            // debugger
+            // document.body.appendChild(newImg);
+        // });
+        debugger
         const storageRef = firebase.storage().ref(); // /memes/${this.fileName}${this.fileType}
         const memeRef = storageRef.child(`${this.fileName}${this.fileType}`);
         // let dataRef = firebase.database().ref("memes");
         debugger
-        memeRef.put(this.meme).then(function(snapshot) {
+        memeRef.putString(this.previewCanvas.toDataURL(), 'data_url').then(function(snapshot) {
             debugger
             const url = snapshot.downloadURL;
             console.log(url);
         })
+
+        
         // let storageRef = firebase.storage().ref(); 
         // let uploadTask = storageRef.put(this.meme);
         // debugger
