@@ -7,7 +7,7 @@
 <script type="text/javascript" src="./memepool/app.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-firestone.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-database.js"></script>
 <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-storage.js"></script>
 <script>
     // Initialize Firebase
@@ -54,6 +54,11 @@
         </div>
         <div class="content">
             <form class="hidden">
+                <div class="loading-bar standby">
+                    <div class="bar">
+                    </div>
+                    <p class="progress"></p>
+                </div>
                 <div class="blanks hidden">
                     <label class="title-field">
                         <div class="input-name"><p class="name">Title</p><p class="msg"></p></div>
@@ -74,9 +79,7 @@
                             <button class="add-button">+</button>
                         </div>
                         <div class="tags-container">
-                            <!-- <p class="tag"><span class="tag-name">#high</span><span class="cross">X</span></p> -->
                         </div>
-                        <!-- <textarea class="tags"></textarea> -->
                     </label>
                     <input type="file" accept="image/*" class="file" />
                 </div>
@@ -97,6 +100,7 @@
             </form>
             <div class="memes-container hidden">
                 <header><p class="hidden">#All</p></header>
+                <ul></ul>
             </div>
         </div>
         <!-- <img src="" id="preview"> -->

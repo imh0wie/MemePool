@@ -4,7 +4,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const previewCtx = previewCanvas.getContext("2d");
     const previewImg = document.getElementById("default-meme");
     const file = document.querySelector(".content form .blanks .file").files[0];
-    const fileInputEl = document.querySelector(".content form .blanks input");
+    const titleInputEl = document.querySelector(".content form .blanks .title");
+    const upperTextInputEl = document.querySelector(".content form .blanks .upper-text");
+    const lowerTextInputEl = document.querySelector(".content form .blanks .lower-text");
+    const tagsInputEl = document.querySelector(".content form .blanks .tags");
+    const fileInputEl = document.querySelector(".content form .blanks .file");
     const bgBars = $$(".bg-bars").children();
     $$(function() {
         bgBars.each(bar => {
@@ -21,11 +25,15 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     const options = {
         documentEl: documentEl,
+        titleInputEl: titleInputEl,
+        upperTextInputEl: upperTextInputEl,
+        lowerTextInputEl: lowerTextInputEl,
+        tagsInputEl: tagsInputEl,
+        fileInputEl: fileInputEl,
         previewCanvas: previewCanvas,
         previewCtx: previewCtx,
         previewImg: previewImg,
         file: file,
-        fileInputEl: fileInputEl,
     };
     memepool = new MemePool(options);
     memepool.render();
@@ -148,28 +156,33 @@ class UploadForm extends Komponent {
     constructor(options) {
         super(options);
         this.form = $$(".content form.hidden");
+        this.loadingBarContainer = $$(".content form .loading-bar");
+        this.loadingBar = $$(".content form .loading-bar .bar");
+        this.loadingProgress = $$(".content form .loading-bar .progress");
         this.titleInput = $$(".content form .blanks label .title");
         this.upperTextInput = $$(".content form .blanks label .upper-text");
-        this.upperText = "";
         this.lowerTextInput = $$(".content form .blanks label .lower-text");
-        this.lowerText = "";
         this.tagsInput = $$(".content form .blanks label .tags");
         this.tagsButton = $$(".content form .blanks label .input-container .add-button");
         this.tagsContainer = $$(".content form .blanks label .tags-container");
         this.fileInput = $$(".content form .blanks .file");
-        this.fileInputEl = options.fileInputEl;
         this.preview = $$(".content form .preview");
         this.canvas = $$(".content form .preview canvas");
         this.defaultMeme = $$(".content form .preview img");
         this.previewButton = $$(".content form .preview .buttons-container .step.i button");
         this.submitButton = $$(".content form .preview .buttons-container .step.ii button");
+        this.titleInputEl = options.titleInputEl;
+        this.upperTextInputEl = options.upperTextInputEl;
+        this.lowerTextInputEl = options.lowerTextInputEl;
+        this.tagsInputEl = options.tagsInputEl;
+        this.fileInputEl = options.fileInputEl;
         this.previewCanvas = options.previewCanvas;
         this.previewCtx = options.previewCtx;
         // this.previewImg = options.previewImg;
         this.file = options.file;
         this.drawPreview = this.drawPreview.bind(this);
     }
-
+    
     toggleContainer() {
         this.form.toggleClass("hidden");
     }
@@ -186,12 +199,17 @@ class UploadForm extends Komponent {
         this.ready();
     }
 
+    clearContent() {
+
+    }
+
     handleTags(e) {
         e.preventDefault();
         if (!this.tags) this.tags = [];
-        if (!this.tagsInput.val() || this.tags.includes(this.tagsInput.val().toLowerCase())) return;
-        this.tags.push(this.tagsInput.val().toLowerCase());
-        this.tagsContainer.append(`<p class="tag"><span class="tag-name">#${this.tagsInput.val().toLowerCase()}</span><span class="cross">X</span></p>`);
+        const tag = this.tagsInput.val().toLowerCase();
+        if (!this.tagsInput.val() || this.tags.includes(tag)) return;
+        this.tags.push(tag);
+        this.tagsContainer.append(`<p class="tag"><span class="tag-name">#${tag}</span><span class="cross">X</span></p>`);
         this.ready();
     }
 
@@ -224,10 +242,14 @@ class UploadForm extends Komponent {
                 this.drawPreview();
                 this.submitButton.removeClass("disabled");
                 this.submitButton.addClass("ready");
-                if (!this.fileInputEl.value) {
-                    this.fileInputEl.value = this.file.name.slice(0, -4);
+                if (!this.titleInput.val()) {
+                    this.titleInputEl.value = this.file.name.slice(0, -4);
                     this.title = this.file.name.slice(0, -4);
+                } else {
+                    this.title = this.titleInput.val();
                 }
+                this.upperText = this.upperTextInput.val();
+                this.lowerText = this.lowerTextInput.val();
             }
             reader.readAsDataURL(this.file);
         } else {
@@ -314,65 +336,89 @@ class UploadForm extends Komponent {
                 return;
             }
         }
-
         this.fileName = this.title.toLowerCase().split(" ").join("-");
         this.fileType = this.file.name.split("").reverse().slice(0, 4).reverse().join("");
-        // const newInput = document.createElement("input");
-        // newInput.setAttribute("type", "file");
-        // this.meme = new Blob([this.previewCanvas.toDataURL()], {
-            // type: this.file.type,
-            // lastModified: Date.now(),
-        //   });
-        // this.previewCanvas.toBlob(blob => {
-            // const newImg = document.createElement('img');
-            // debugger
-            // this.meme = blob;
-            // this.meme = URL.createObjectURL(blob);
-            // newImg.onload = function() {
-                // no longer need to read the blob so it's revoked
-                // URL.revokeObjectURL(url);
-            // };
-            // newImg.src = url;
-            // debugger
-            // document.body.appendChild(newImg);
-        // });
-        debugger
         const storageRef = firebase.storage().ref(); // /memes/${this.fileName}${this.fileType}
         const memeRef = storageRef.child(`${this.fileName}${this.fileType}`);
-        // let dataRef = firebase.database().ref("memes");
-        debugger
-        memeRef.putString(this.previewCanvas.toDataURL(), 'data_url').then(function(snapshot) {
-            debugger
-            const url = snapshot.downloadURL;
-            console.log(url);
-        })
-
-        
-        // let storageRef = firebase.storage().ref(); 
-        // let uploadTask = storageRef.put(this.meme);
+        const uploadTask = memeRef.putString(this.previewCanvas.toDataURL(), 'data_url');
+        uploadTask.on("state_changed",
+            (snapshot) => {
+                this.titleInputEl.value = "";
+                this.upperTextInputEl.value = "";
+                this.lowerTextInputEl.value = "";
+                this.tagsInputEl.value = "";
+                this.fileInputEl.value = "";
+                this.tagsContainer.children().each(child => child.remove());
+                this.file = "";
+                this.canvas.addClass("none");
+                this.defaultMeme.removeClass("none");
+                let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log('Upload is ' + progress + '% done');
+                switch (snapshot.state) {
+                    case "paused":
+                        console.log('Upload is paused');
+                        break;
+                    case "running":
+                        console.log('Upload is running');
+                        this.loadingBarContainer.toggleClass("standby");
+                        this.loadingBar.attr("css", { width: `${Math.round(progress * 200)}px`, });
+                        this.loadingProgress.html(`${Math.round(progress)}%`);
+                        break;
+                }
+            },
+            (error) => {
+                switch (error.code) {
+                    case "storage/canceled":
+                        console.log("User canceled the upload")
+                        break;
+                    case "storage/unknown":
+                        console.log("Unknown error occurred, inspect error.serverResponse");
+                        break;
+                }
+            }, 
+            () => {
+                uploadTask.snapshot.ref.getDownloadURL()
+                .then(
+                    (downloadURL) => {
+                        console.log(downloadURL);
+                        this.url = downloadURL;
+                    }
+                ).then(
+                    () => {
+                        const dataRef = firebase.database().ref("memes");
+                        const memeData = {
+                            title: this.title,
+                            tags: this.tags,
+                            upperText: this.upperText,
+                            lowerText: this.lowerText,
+                            url: this.url,
+                        };
+                        dataRef.push(memeData);
+                    }
+                ).then(
+                    () => {
+                        this.loadingBarContainer.toggleClass("standby");
+                        this.loadingBar.attr("css", { width: "0px"});
+                        this.loadingProgress.html("0%");
+                        this.toggleContainer();
+                    }
+                );
+        });
         // debugger
-        // uploadTask.on("state_changed", function(snapshot) {
-
-        // }, function(error) {
-            
-        // }, function() {
-        //     console.log(url);
-        //     let memeKey = firebase.database().ref("/memes/").push().key;
-        //     let url = uploadTask.snapshot.downloadURL;
-        //     let updates = {};
-        //     let memeData = {
-        //         title: this.title,
-        //         upperText: this.upperText,
-        //         lowerText: this.lowerText,
-        //         tags: this.tags,
-        //         url: url,
-        //     }
-        //     debugger
-        //     updates[`/memes/${memeKey}`] = memeData;
-        //     debugger
-        //     firebase.database().ref().update(updates);
-        //     debugger
-        // })
+        // const dataRef = firebase.database().ref("memes");
+        // const memeData = {
+        //     title: this.title,
+        //     tags: this.tags,
+        //     upperText: this.upperText,
+        //     lowerText: this.lowerText,
+        //     url: this.url,
+        // };
+        // dataRef.push(memeData).then(function() {
+        //     this.loadingBarContainer.toggleClass("standby");
+        //     this.loadingBar.attr("css", { width: "0px"});
+        //     this.loadingProgress.html("0%");
+        //     this.toggleContainer();
+        // });
     }
 
     ready() {
@@ -394,17 +440,25 @@ class MemesContainer extends Komponent {
     constructor(options) {
         super(options);
         this.memesContainer = $$(".memes-container.hidden");
+        this.header = $$(".memes-container header p");
+        this.memes = $$(".memes-container ul");
+    }
+
+    appendMemes() {
+
+        this.memes.append()
     }
 
     render() {
-        $$(() => setTimeout(() => this.memesContainer.removeClass("hidden"), 500));        
-        this.memesContainer.children().each((child) => {
-            const node = $$(child);
-            node.removeClass("hidden");
-            setTimeout(() => {
-                node.children().each((child) => $$(child).removeClass("hidden"))
-            }, 1000);
-        })
+        setTimeout(() => this.memesContainer.removeClass("hidden"), 500);
+        setTimeout(() => this.header.removeClass("hidden"), 1000);
+        // this.memesContainer.children().each((komponent) => {
+        //     const node = $$(komponent);
+        //     // node.removeClass("hidden");
+        //     setTimeout(() => {
+        //         node.children().each(child => $$(child).removeClass("hidden"))
+        //     }, 1000);
+        // })
 
     }
 }
