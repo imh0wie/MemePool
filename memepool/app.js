@@ -133,6 +133,8 @@ class Bar extends Komponent {
     }
 
     toggle() {
+        this.file = $$(".content form .blanks .file").val();
+        if (!this.file) this.opened = false;
         if (this.opened) {
             this.uploadForm.toggleContent();
             setTimeout(() => this.toggleForm(), 80);
@@ -361,9 +363,9 @@ class UploadForm extends Komponent {
                         break;
                     case "running":
                         console.log('Upload is running');
-                        this.loadingBarContainer.toggleClass("standby");
-                        this.loadingBar.attr("css", { width: `${Math.round(progress * 200)}px`, });
-                        this.loadingProgress.html(`${Math.round(progress)}%`);
+                        // this.loadingBarContainer.toggleClass("standby");
+                        // this.loadingBar.attr("css", { width: `${Math.round(progress * 200)}px`, });
+                        // this.loadingProgress.html(`${Math.round(progress)}%`);
                         break;
                 }
             },
@@ -398,10 +400,11 @@ class UploadForm extends Komponent {
                     }
                 ).then(
                     () => {
-                        this.loadingBarContainer.toggleClass("standby");
-                        this.loadingBar.attr("css", { width: "0px"});
-                        this.loadingProgress.html("0%");
-                        this.toggleContainer();
+                        // this.loadingBarContainer.toggleClass("standby");
+                        // this.loadingBar.attr("css", { width: "0px"});
+                        // this.loadingProgress.html("0%");
+                        this.toggleContent();
+                        setTimeout(() => this.toggleContainer(), 150);
                     }
                 );
         });
