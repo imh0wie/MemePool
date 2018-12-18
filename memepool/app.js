@@ -210,6 +210,7 @@ class UploadForm extends Komponent {
         if (!this.tagsInput.val() || this.tags.includes(tag)) return;
         this.tags.push(tag);
         this.tagsContainer.append(`<p class="tag"><span class="tag-name">#${tag}</span><span class="cross">X</span></p>`);
+        this.tagsInputEl.value = "";
         this.ready();
     }
 
@@ -271,14 +272,14 @@ class UploadForm extends Komponent {
 
         this.previewCtx.textBaseline = "top";
         this.upperText.split("\n").forEach((line, i) => {
-            this.previewCtx.fillText(line, this.previewCanvas.width / 2, i * this.fontSize, this.previewCanvas.width);
-            this.previewCtx.strokeText(line, this.previewCanvas.width / 2, i * this.fontSize, this.previewCanvas.width);
+            this.previewCtx.fillText(line.toUpperCase(), this.previewCanvas.width / 2, i * this.fontSize, this.previewCanvas.width);
+            this.previewCtx.strokeText(line.toUpperCase(), this.previewCanvas.width / 2, i * this.fontSize, this.previewCanvas.width);
         })
 
         this.previewCtx.textBaseline = "middle";
         this.lowerText.split("\n").forEach((line, i) => {
-            this.previewCtx.fillText(line, this.previewCanvas.width / 2, this.previewCanvas.height - (this.lowerText.split("\n").length - i) * this.fontSize, this.previewCanvas.width);
-            this.previewCtx.strokeText(line, this.previewCanvas.width / 2, this.previewCanvas.height - (this.lowerText.split("\n").length - i) * this.fontSize, this.previewCanvas.width);
+            this.previewCtx.fillText(line.toUpperCase(), this.previewCanvas.width / 2, this.previewCanvas.height - (this.lowerText.split("\n").length - i) * this.fontSize, this.previewCanvas.width);
+            this.previewCtx.strokeText(line.toUpperCase(), this.previewCanvas.width / 2, this.previewCanvas.height - (this.lowerText.split("\n").length - i) * this.fontSize, this.previewCanvas.width);
         })
     }
 
