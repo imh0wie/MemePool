@@ -201,10 +201,6 @@ class UploadForm extends Komponent {
         this.ready();
     }
 
-    clearContent() {
-
-    }
-
     handleTags(e) {
         e.preventDefault();
         if (!this.tags) this.tags = [];
@@ -448,14 +444,31 @@ class MemesContainer extends Komponent {
         this.memes = $$(".memes-container ul");
     }
 
-    appendMemes() {
+    setHeader() {
 
-        this.memes.append()
+    }
+
+    appendMemes() {
+        this.database = firebase.database().ref("memes");
+        this.database.on("child_added", (snapshot) => {
+            const data = snapshot.val();
+            this.memes.append(`<li class="hidden"><img src="${data.url}"><a href="${data.url}" class="hidden">Download</a></li>`);
+            const meme = $$(`.memes-container ul li`);
+            const link = $$(`.memes-container ul li a`);
+            setTimeout(() => meme.removeClass("hidden"), 1100);
+            meme.on("mouseenter", () => {
+                link.removeClass("hidden");
+            });
+            meme.on("mouseleave", () => {
+                link.addClass("hidden");
+            });
+        });
     }
 
     render() {
         setTimeout(() => this.memesContainer.removeClass("hidden"), 500);
         setTimeout(() => this.header.removeClass("hidden"), 1000);
+        this.appendMemes();
         // this.memesContainer.children().each((komponent) => {
         //     const node = $$(komponent);
         //     // node.removeClass("hidden");

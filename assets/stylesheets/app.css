@@ -114,7 +114,7 @@ header {
 
 #logo {
     display: block;
-    width: 700px;
+    width: 600px;
     margin: 0 auto;
     position: relative;
     top: 10px;
@@ -500,6 +500,11 @@ header {
 .content .memes-container.hidden {
     opacity: 1;
     height: 45px;
+    transition: all 0.4s ease;
+}
+
+.content .memes-container {
+    transition: all 0.4s ease;
 }
 
 .content .memes-container header {
@@ -514,5 +519,29 @@ header {
     display: block;
     width: 30px;
     margin: 0;
+    transition: all 0.4s ease;
+}
+
+.content .memes-container ul {
+    display: flex;
+    flex-wrap: wrap;
+    overflow-y: scroll;
+    height: 310px;
+}
+
+.content .memes-container ul li {
+    display: flex;
+    list-style: none;
+    margin: 10px;
+    transition: all 0.4s ease;
+}
+
+.content .memes-container ul li img {
+    
+}
+
+.content .memes-container ul li a {
+    position: absolute;
+    margin: 130px 60px;
     transition: all 0.4s ease;
 }
