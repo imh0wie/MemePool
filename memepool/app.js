@@ -347,6 +347,8 @@ class UploadForm extends Komponent {
                 this.lowerTextInputEl.value = "";
                 this.tagsInputEl.value = "";
                 this.fileInputEl.value = "";
+                this.submitButton.removeClass("ready");
+                this.submitButton.addClass("disabled");
                 this.tagsContainer.children().each(child => child.remove());
                 this.file = "";
                 this.canvas.addClass("none");
