@@ -524,15 +524,15 @@ header {
 
 .content .memes-container ul {
     display: flex;
+    margin: 0;
     flex-wrap: wrap;
     overflow-y: scroll;
     height: 310px;
 }
 
 .content .memes-container ul li {
-    display: flex;
     list-style: none;
-    margin: 10px;
+    margin: 10px 14px;
     transition: all 0.4s ease;
 }
 
@@ -541,7 +541,20 @@ header {
 }
 
 .content .memes-container ul li a {
-    position: absolute;
-    margin: 130px 60px;
+    display: block;
+    color: white;
+    font-family: Impact;
+    text-align: center;
+    text-decoration: none;
+    text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;  
+    transition: all 0.4s ease;
+}
+
+.content .memes-container ul li a:hover {
+    transform: scale(1.15);
     transition: all 0.4s ease;
 }
