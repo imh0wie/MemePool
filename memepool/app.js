@@ -2,15 +2,15 @@
 
 document.addEventListener("DOMContentLoaded", () => {
     const documentEl = $$(document);
-    const previewCanvas = document.getElementById("canvas");
-    const previewCtx = previewCanvas.getContext("2d");
-    const previewImg = document.getElementById("default-meme");
-    const file = document.querySelector(".content form .blanks .file").files[0];
-    const titleInputEl = document.querySelector(".content form .blanks .title");
-    const upperTextInputEl = document.querySelector(".content form .blanks .upper-text");
-    const lowerTextInputEl = document.querySelector(".content form .blanks .lower-text");
-    const tagsInputEl = document.querySelector(".content form .blanks .tags");
-    const fileInputEl = document.querySelector(".content form .blanks .file");
+    // const previewCanvas = document.getElementById("canvas");
+    // const previewCtx = previewCanvas.getContext("2d");
+    // const previewImg = document.getElementById("default-meme");
+    // const file = document.querySelector(".content form .blanks .file").files[0];
+    // const titleInputEl = document.querySelector(".content form .blanks .title");
+    // const upperTextInputEl = document.querySelector(".content form .blanks .upper-text");
+    // const lowerTextInputEl = document.querySelector(".content form .blanks .lower-text");
+    // const tagsInputEl = document.querySelector(".content form .blanks .tags");
+    // const fileInputEl = document.querySelector(".content form .blanks .file");
     const bgBars = $$(".bg-bars").children();
     $$(function() {
         bgBars.each(bar => {
@@ -27,15 +27,15 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     const options = {
         documentEl: documentEl,
-        titleInputEl: titleInputEl,
-        upperTextInputEl: upperTextInputEl,
-        lowerTextInputEl: lowerTextInputEl,
-        tagsInputEl: tagsInputEl,
-        fileInputEl: fileInputEl,
-        previewCanvas: previewCanvas,
-        previewCtx: previewCtx,
-        previewImg: previewImg,
-        file: file,
+        // titleInputEl: titleInputEl,
+        // upperTextInputEl: upperTextInputEl,
+        // lowerTextInputEl: lowerTextInputEl,
+        // tagsInputEl: tagsInputEl,
+        // fileInputEl: fileInputEl,
+        // previewCanvas: previewCanvas,
+        // previewCtx: previewCtx,
+        // previewImg: previewImg,
+        // file: file,
     };
     memepool = new MemePool(options);
     memepool.render();
@@ -136,7 +136,7 @@ class Bar extends Komponent {
 
     toggle() {
         this.file = $$(".content form .blanks .file").val();
-        if (!this.file) this.opened = false;
+        if (!this.file && !this.uploaded) this.opened = false;
         if (this.opened) {
             this.uploadForm.toggleContent();
             setTimeout(() => this.toggleForm(), 80);
@@ -160,38 +160,75 @@ class UploadForm extends Komponent {
     constructor(options) {
         super(options);
         this.form = $$(".content form.hidden");
-        this.loadingBarContainer = $$(".content form .loading-bar");
-        this.loadingBar = $$(".content form .loading-bar .bar");
-        this.loadingProgress = $$(".content form .loading-bar .progress");
-        this.titleInput = $$(".content form .blanks label .title");
-        this.upperTextInput = $$(".content form .blanks label .upper-text");
-        this.lowerTextInput = $$(".content form .blanks label .lower-text");
-        this.tagsInput = $$(".content form .blanks label .tags");
-        this.tagsButton = $$(".content form .blanks label .input-container .add-button");
-        this.tagsContainer = $$(".content form .blanks label .tags-container");
-        this.fileInput = $$(".content form .blanks .file");
-        this.preview = $$(".content form .preview");
-        this.canvas = $$(".content form .preview canvas");
-        this.defaultMeme = $$(".content form .preview img");
-        this.previewButton = $$(".content form .preview .buttons-container .step.i button");
-        this.submitButton = $$(".content form .preview .buttons-container .step.ii button");
-        this.titleInputEl = options.titleInputEl;
-        this.upperTextInputEl = options.upperTextInputEl;
-        this.lowerTextInputEl = options.lowerTextInputEl;
-        this.tagsInputEl = options.tagsInputEl;
-        this.fileInputEl = options.fileInputEl;
-        this.previewCanvas = options.previewCanvas;
-        this.previewCtx = options.previewCtx;
+        this.titleInputEl = document.querySelector(".content form .blanks .title");
+        this.upperTextInputEl = document.querySelector(".content form .blanks .upper-text");
+        this.lowerTextInputEl = document.querySelector(".content form .blanks .lower-text");
+        this.tagsInputEl = document.querySelector(".content form .blanks .tags");
+        this.fileInputEl = document.querySelector(".content form .blanks .file");
+        this.previewCanvas = document.querySelector(".content form .preview #canvas")
         // this.previewImg = options.previewImg;
         this.file = options.file;
+        this.opened = false;
         this.drawPreview = this.drawPreview.bind(this);
+        this.handleTags = this.handleTags.bind(this);
     }
     
     toggleContainer() {
         this.form.toggleClass("hidden");
     }
+
+    appendLeft() {
+        this.form.append('<div class="blanks hidden"></div>');
+        this.left = $$(".content form .blanks");
+        
+        this.left.append('<label class="title-field"><div class="input-name"><p class="name">Title</p><p class="msg"></p></div><input type="text" class="title" /></label>');
+        this.titleLabel =  $$(".content form .blanks .title-field");
+        this.titleInput = $$(".content form .blanks label .title");
+
+        this.left.append('<label class="upper-text-field"><div class="input-name"><p class="name">Upper text</p><p class="msg"></p></div><textarea class="upper-text"></textarea></label>');
+        this.upperTextLabel = $$(".content form .blanks .upper-text-field");
+        this.upperTextInput = $$(".content form .blanks label .upper-text");
+        
+        this.left.append('<label class="lower-text-field"><div class="input-name"><p class="name">Lower text</p><p class="msg"></p></div><textarea class="lower-text"></textarea></label>');
+        this.lowerTextLabel = $$(".content form .blanks .lower-text-field");
+        this.lowerTextInput = $$(".content form .blanks label .lower-text");
+        
+        this.left.append('<label class="tags-field"><div class="input-name"><p class="name">Tags</p><p class="msg"></p></div><div class="input-container"><input type="text" class="tags" /><button class="add-button">+</button></div><div class="tags-container"></div></label>');
+        this.tagsLabel =  $$(".content form .blanks .tags-field");
+        this.tagsInput = $$(".content form .blanks label .tags");
+        this.tagsButton = $$(".content form .blanks label .input-container .add-button");
+        this.tagsButton.on("click", (e) => this.handleTags(e));
+        this.tagsContainer = $$(".content form .blanks label .tags-container");
+        
+        this.left.append('<input type="file" accept="image/*" class="file" />');
+        this.fileInput = $$(".content form .blanks .file");
+    }
+
+    appendRight() {
+        this.form.append('<div class="preview hidden"></div>');
+        this.right = $$(".content form .preview");
+
+        this.right.append('<canvas id="canvas" class="none"></canvas>');
+        this.canvas = $$(".content form .preview canvas");
+
+        this.right.append('<img src="./assets/images/default_meme.png" id="default-meme">');
+        this.defaultMeme = $$(".content form .preview img");
+        
+        this.right.append('<div class="buttons-container"></div>');
+        this.buttonsContainer = $$(".content form .preview .buttons-container");
+
+        this.buttonsContainer.append('<div class="step i"><div class="step-name one"><span>1</span><p>Preview</p></div><button class="ready">Generate</button></div>');
+        this.previewButton = $$(".content form .preview .buttons-container .step.i button");
+
+        this.buttonsContainer.append('<div class="step ii"><div class="step-name two"><span>2</span><p>Preview</p></div><button class="ready">Generate</button></div>');
+        this.submitButton = $$(".content form .preview .buttons-container .step.ii button");
+    }
     
     toggleContent() {
+        if (!this.opened) {
+            this.appendLeft();
+            this.appendRight();
+        }
         if (this.file) {
             this.canvas.removeClass("none");
             this.defaultMeme.addClass("none");
@@ -200,7 +237,46 @@ class UploadForm extends Komponent {
             this.defaultMeme.removeClass("none");
         }
         this.toggleChildren(this.form, "hidden", 0);
+        debugger
+        if (this.opened) {
+            debugger
+            this.removeLeft();
+            this.removeRight();
+        }
+        this.opened = this.opened ? false : true;
         this.ready();
+    }
+
+    removeLeft() {
+        debugger
+        // this.left.remove(this.titleLabel);
+        // this.left.remove(this.upperTextLabel);
+        // this.left.remove(this.lowerTextLabel);
+        // this.left.remove(this.tagsLabel);
+        // this.left.remove(this.fileInput);
+        this.form.remove(".content form .blanks");
+        debugger
+
+        // this.titleLabel.parent().remove();
+        // this.upperTextLabel.parent().remove();
+        // this.lowerTextLabel.parent().remove();
+        // this.tagsLabel.parent().remove();
+        // this.fileInput.parent().remove();
+    }
+
+    removeRight() {
+        // this.right.remove(this.canvas);
+        // this.right.remove(this.defaultMeme);
+        // this.right.remove(this.buttonsContainer);
+        // this.right.remove(this.previewButton);
+        // this.right.remove(this.submitButton);
+        this.form.remove(".content form .preview");
+        // this.form.remove(this.right);
+        // this.canvas.parent().remove();
+        // this.defaultMeme.parent().remove();
+        // this.previewButton.parent().remove();
+        // this.submitButton.parent().remove();
+        // this.buttonsContainer.parent().remove();
     }
 
     handleTags(e) {
@@ -218,17 +294,20 @@ class UploadForm extends Komponent {
         e.preventDefault();
         const tagName = $$(tag.parent().children().nodes[0]).html().slice(1);
         const tagNameIdx = this.tags.indexOf(tagName);
-        this.tags.splice(tagNameIdx, 1);
+        this.tags.splice(tagNameIdx, 1); // removing tag from tags array
         tag.parent().remove();
     }
 
     handleUpload(e) {
+        e.preventDefault();
+        this.previewCtx = this.previewCanvas.getContext("2d");
         this.previewCtx.clearRect(0, 0, 180, 280);
         this.file = e.currentTarget.files[0];
         const reader = new FileReader();
         reader.addEventListener("load", function() {
             this.img.src = reader.result;
         }, false)
+        // this.uploaded = true;
     }
 
     handlePreview(e) {
@@ -363,9 +442,6 @@ class UploadForm extends Komponent {
                         break;
                     case "running":
                         console.log('Upload is running');
-                        // this.loadingBarContainer.toggleClass("standby");
-                        // this.loadingBar.attr("css", { width: `${Math.round(progress * 200)}px`, });
-                        // this.loadingProgress.html(`${Math.round(progress)}%`);
                         break;
                 }
             },
@@ -400,9 +476,6 @@ class UploadForm extends Komponent {
                     }
                 ).then(
                     () => {
-                        // this.loadingBarContainer.toggleClass("standby");
-                        // this.loadingBar.attr("css", { width: "0px"});
-                        // this.loadingProgress.html("0%");
                         this.toggleContent();
                         setTimeout(() => this.toggleContainer(), 150);
                     }
@@ -411,16 +484,16 @@ class UploadForm extends Komponent {
     }
 
     ready() {
-        this.titleInput.on("change", (e) => this.title = e.currentTarget.value.toUpperCase());
-        this.upperTextInput.on("change", (e) => this.upperText = e.currentTarget.value.toUpperCase());
-        this.lowerTextInput.on("change", (e) => this.lowerText = e.currentTarget.value.toUpperCase());
-        this.tagsButton.off('click');
-        this.tagsButton.on("click", (e) => this.handleTags(e));
+        if (this.titleInput) this.titleInput.on("change", (e) => this.title = e.currentTarget.value.toUpperCase());
+        if (this.upperTextInput) this.upperTextInput.on("change", (e) => this.upperText = e.currentTarget.value.toUpperCase());
+        if (this.lowerTextInput) this.lowerTextInput.on("change", (e) => this.lowerText = e.currentTarget.value.toUpperCase());
+        // if (this.tagsButton) this.tagsButton.off('click');
+        if (this.tagsButton) this.tagsButton.on("click", (e) => this.handleTags(e));
         this.tagsRemovers = $$(".content form .blanks label .tags-container .tag .cross");
-        this.tagsRemovers.each((remover) => $$(remover).on("click", (e) => this.removeTags(e, $$(remover))));
-        this.fileInput.on("change", (e) => this.handleUpload(e));
-        this.previewButton.on("click", (e) => this.handlePreview(e));
-        this.submitButton.on("click", (e) => this.handleSubmit(e));
+        if (this.tagsRemovers) this.tagsRemovers.each((remover) => $$(remover).on("click", (e) => this.removeTags(e, $$(remover))));
+        if (this.fileInput) this.fileInput.on("change", (e) => this.handleUpload(e));
+        if (this.previewButton) this.previewButton.on("click", (e) => this.handlePreview(e));
+        if (this.submitButton) this.submitButton.on("click", (e) => this.handleSubmit(e));
         // this.drawPreview();
     }
 }
@@ -428,9 +501,9 @@ class UploadForm extends Komponent {
 class MemesContainer extends Komponent {
     constructor(options) {
         super(options);
-        this.memesContainer = $$(".memes-container.hidden");
-        this.header = $$(".memes-container header p");
-        this.memes = $$(".memes-container ul");
+        this.memesContainer = $$(".content .memes-container");
+        this.header = $$(".content .memes-container header p");
+        this.memes = $$(".content .memes-container ul");
     }
 
     setHeader() {
@@ -442,16 +515,24 @@ class MemesContainer extends Komponent {
         let i = 0;
         this.database.on("child_added", (snapshot) => {
             const data = snapshot.val();
-            this.memes.append(`<li class="hidden" id=a${i}><img src="${data.url}"><a href="${data.url}" download=${data.title.toLowerCase().split(" ").join()}>${data.title}</a></li>`); // <a href="${data.url}" class="hidden">Download</a>
-            const meme = $$(".memes-container ul li");
-            // const link = $$(`.memes-container ul li a`);
-            setTimeout(() => meme.removeClass("hidden"), 1100);
-            // meme.on("mouseenter", () => {
-            //     link.removeClass("hidden");
-            // });
-            // meme.on("mouseleave", () => {
-            //     link.addClass("hidden");
-            // });
+            // const file = new File([data.url], data.title.toLowerCase().split(" ").join());
+            const memesItem = `<li class="hidden" id="m${i}"><img src="${data.url}"><a href="${data.url}" download="${data.title.toLowerCase()}" id="a${i}">${data.title}</a></li>`;
+            this.memes.append(memesItem); // <a href="${data.url}" class="hidden">Download</a>
+            // this.memes.append(`<li class="hidden"><img src="${data.url}"><form method="get" action="${data.url}"><button type="submit">${data.title}</button></form></li>`); // <a href="${data.url}" class="hidden">Download</a>
+            this.meme = $$(".content .memes-container ul li");
+            this.memeTitle = $$(".content .memes-container ul li a");
+            this.memeTitle.on("click", () => {
+                const xhr = new XMLHttpRequest();
+                xhr.repsonseType = "blob";
+                xhr.onload = (event) => {
+                    const blob = xhr.response;
+                }
+                xhr.open("GET", data.url);
+                xhr.send();
+            }) // check (no internet)
+            setTimeout(() => this.meme.removeClass("hidden"), 1100);
+            // this.memeTitle.removeClass("hidden");
+            // this.meme.removeClass("hidden");
             i++;
         });
     }
