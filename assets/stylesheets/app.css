@@ -7,6 +7,17 @@
     transition: all 0.4s ease;
 }
 
+.removed {
+    display: none;
+    opacity: 0;
+    transition: all 0.4s ease;
+}
+
+/* .folded {
+    width: 0;
+    transition: all 0.4s ease;
+} */
+
 .standby {
     opacity: 0;
     transition: all 0.4s ease;
@@ -374,7 +385,7 @@ header {
 }
 
 .content form .preview {
-    width: 100%;
+    width: 180px;
     margin: 10px 15px;
     transition: all 0.4s ease;
 }
@@ -385,11 +396,13 @@ header {
 
 .content form .preview #canvas {
     display: block;
+    width: 180px;
     margin: 0 auto;
 }
 
 .content form .preview img {
     display: block;
+    width: 180px;
     margin: 0px auto;
 }
 
@@ -405,8 +418,8 @@ header {
 .content form .preview .buttons-container {
     display: flex;
     justify-content: space-between;
-    /* width: 160px; */
-    margin: 10px 5px;
+    width: 180px;
+    margin: 10px 0;
 }
 
 .content form .preview .buttons-container .step {
