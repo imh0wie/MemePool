@@ -16,7 +16,7 @@ class Bar extends Komponent {
 
     toggle() {
         this.file = $$(".content form .blanks .file").val();
-        if (!this.file) this.opened = false;
+        if (!this.file && !this.uploaded) this.opened = false;
         if (this.opened) {
             this.uploadForm.toggleContent();
             setTimeout(() => this.toggleForm(), 80);

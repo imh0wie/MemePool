@@ -1,41 +1,13 @@
-// import { MemePool } from "./memepool";
-
 document.addEventListener("DOMContentLoaded", () => {
     const documentEl = $$(document);
-    // const previewCanvas = document.getElementById("canvas");
-    // const previewCtx = previewCanvas.getContext("2d");
-    // const previewImg = document.getElementById("default-meme");
-    // const file = document.querySelector(".content form .blanks .file").files[0];
-    // const titleInputEl = document.querySelector(".content form .blanks .title");
-    // const upperTextInputEl = document.querySelector(".content form .blanks .upper-text");
-    // const lowerTextInputEl = document.querySelector(".content form .blanks .lower-text");
-    // const tagsInputEl = document.querySelector(".content form .blanks .tags");
-    // const fileInputEl = document.querySelector(".content form .blanks .file");
     const bgBars = $$(".bg-bars").children();
     $$(function() {
         bgBars.each(bar => {
             setTimeout(() => $$(bar).removeClass("hidden"), 0);
-            // setTimeout(() => bar.classList.contains("hidden-height") ? $$(bar).removeClass("hidden-height") : $$(bar).removeClass("hidden-height"), 0);
-            // setTimeout(() => {
-            //     if (bar.classList.contains("hidden-width")) {
-            //         $$(bar).removeClass("hidden-width");
-            //     } else {
-            //         $$(bar).removeClass("hidden-height");
-            //     }
-            // }, 0);
         });
     });
     const options = {
         documentEl: documentEl,
-        // titleInputEl: titleInputEl,
-        // upperTextInputEl: upperTextInputEl,
-        // lowerTextInputEl: lowerTextInputEl,
-        // tagsInputEl: tagsInputEl,
-        // fileInputEl: fileInputEl,
-        // previewCanvas: previewCanvas,
-        // previewCtx: previewCtx,
-        // previewImg: previewImg,
-        // file: file,
     };
     memepool = new MemePool(options);
     memepool.render();
@@ -184,54 +156,16 @@ class UploadForm extends Komponent {
         this.tagsInputEl = document.querySelector(".content form .blanks .tags");
         this.fileInputEl = document.querySelector(".content form .blanks .file");
         this.previewCanvas = document.querySelector(".content form .preview #canvas")
-        // this.previewImg = options.previewImg;
         this.file = options.file;
         this.opened = false;
         this.drawPreview = this.drawPreview.bind(this);
-        // this.handleTags = this.handleTags.bind(this);
     }
     
     toggleContainer() {
         this.form.toggleClass("hidden");
     }
-
-    // appendLeft() {
-    //     this.form.append('');
-        
-    //     this.left.append('');
-    //     // this.titleInput.on("change", (e) => this.title = e.currentTarget.value.toUpperCase());
-
-    //     this.left.append('');
-    //     // this.upperTextInput.on("change", (e) => this.upperText = e.currentTarget.value.toUpperCase());
-        
-    //     this.left.append('');
-    //     // this.lowerTextInput.on("change", (e) => this.lowerText = e.currentTarget.value.toUpperCase());
-        
-    //     this.left.append('');
-    //     // this.tagsButton.on("click", (e) => this.handleTags(e))
-        
-    //     this.left.append('');
-    // }
-
-    // appendRight() {
-    //     this.form.append('');
-
-    //     this.right.append('');
-
-    //     this.right.append('');
-
-    //     this.right.append('');
-
-    //     this.buttonsContainer.append('');
-
-    //     this.buttonsContainer.append('');
-    //     debugger
-    // }
     
     toggleContent() {
-        // if (!this.opened) {
-
-        // }
         if (this.file) {
             this.canvas.removeClass("none");
             this.defaultMeme.addClass("none");
@@ -240,12 +174,6 @@ class UploadForm extends Komponent {
             this.defaultMeme.removeClass("none");
         }
         this.toggleChildren(this.form, "removed", 0);
-        // if (this.opened) {
-        //     debugger
-        //     this.removeLeft();
-        //     this.removeRight();
-        // }
-        // this.opened = this.opened ? false : true;
         this.ready();
     }
 
@@ -258,7 +186,6 @@ class UploadForm extends Komponent {
     }
 
     handleTags(e) {
-        // debugger
         e.preventDefault();
         if (!this.tags) this.tags = [];
         const tag = this.tagsInput.val().toLowerCase();
@@ -286,7 +213,6 @@ class UploadForm extends Komponent {
         reader.addEventListener("load", function() {
             this.img.src = reader.result;
         }, false)
-        // this.uploaded = true;
     }
 
     handlePreview(e) {
@@ -335,7 +261,7 @@ class UploadForm extends Komponent {
         })
 
         this.previewCtx.textBaseline = "middle";
-        this.lowerText.split("\n").forEach((line, i) => {
+        if (this.lowerText) this.lowerText.split("\n").forEach((line, i) => {
             this.previewCtx.fillText(line.toUpperCase(), this.previewCanvas.width / 2, this.previewCanvas.height - (this.lowerText.split("\n").length - i) * this.fontSize, this.previewCanvas.width);
             this.previewCtx.strokeText(line.toUpperCase(), this.previewCanvas.width / 2, this.previewCanvas.height - (this.lowerText.split("\n").length - i) * this.fontSize, this.previewCanvas.width);
         })
@@ -474,7 +400,6 @@ class UploadForm extends Komponent {
         if (this.fileInput) this.fileInput.on("change", (e) => this.handleUpload(e));
         if (this.previewButton) this.previewButton.on("click", (e) => this.handlePreview(e));
         if (this.submitButton) this.submitButton.on("click", (e) => this.handleSubmit(e));
-        // this.drawPreview();
     }
 }
 
@@ -486,22 +411,17 @@ class MemesContainer extends Komponent {
         this.memes = $$(".content .memes-container ul");
     }
 
-    setHeader() {
-
-    }
-
     appendMemes() {
         this.database = firebase.database().ref("memes");
         let i = 0;
         this.database.on("child_added", (snapshot) => {
             const data = snapshot.val();
-            // const file = new File([data.url], data.title.toLowerCase().split(" ").join());
             const memesItem = `<li class="hidden" id="m${i}"><img src="${data.url}"><a href="${data.url}" download="${data.title.toLowerCase()}" id="a${i}">${data.title}</a></li>`;
-            this.memes.append(memesItem); // <a href="${data.url}" class="hidden">Download</a>
-            // this.memes.append(`<li class="hidden"><img src="${data.url}"><form method="get" action="${data.url}"><button type="submit">${data.title}</button></form></li>`); // <a href="${data.url}" class="hidden">Download</a>
+            this.memes.append(memesItem);
             this.meme = $$(".content .memes-container ul li");
             this.memeTitle = $$(".content .memes-container ul li a");
             this.memeTitle.on("click", () => {
+                debugger
                 const xhr = new XMLHttpRequest();
                 xhr.repsonseType = "blob";
                 xhr.onload = (event) => {
@@ -511,8 +431,6 @@ class MemesContainer extends Komponent {
                 xhr.send();
             }) // check (no internet)
             setTimeout(() => this.meme.removeClass("hidden"), 1100);
-            // this.memeTitle.removeClass("hidden");
-            // this.meme.removeClass("hidden");
             i++;
         });
     }
@@ -521,13 +439,5 @@ class MemesContainer extends Komponent {
         setTimeout(() => this.memesContainer.removeClass("hidden"), 500);
         setTimeout(() => this.header.removeClass("hidden"), 1000);
         this.appendMemes();
-        // this.memesContainer.children().each((komponent) => {
-        //     const node = $$(komponent);
-        //     // node.removeClass("hidden");
-        //     setTimeout(() => {
-        //         node.children().each(child => $$(child).removeClass("hidden"))
-        //     }, 1000);
-        // })
-
     }
 }
