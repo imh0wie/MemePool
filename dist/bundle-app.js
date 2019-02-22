@@ -139,6 +139,7 @@ class Bar extends _komponent__WEBPACK_IMPORTED_MODULE_0__["default"] {
         this.opened = false;
         this.searchBar = $$(".bar .inner-bar #search-container input");
         this.tags = [];
+        this.memesContainer = options.memesContainer
     }
 
     toggleForm() {
@@ -162,6 +163,11 @@ class Bar extends _komponent__WEBPACK_IMPORTED_MODULE_0__["default"] {
         }
     }
 
+    removeModal() {
+        this.modal.remove();
+        this.modal = null;
+    }
+
     handleInput() {
       this.database.once('value', (snapshot) => {
         this.tagStore = {};
@@ -173,8 +179,9 @@ class Bar extends _komponent__WEBPACK_IMPORTED_MODULE_0__["default"] {
       if (this.searchBar.val().length > 0) {
         if (!this.modal) {
           const options = {
-            bar: this.bar,
+            bar: this,
             searchBar: this.searchBar,
+            memesContainer: this.memesContainer,
             tagStore: this.tagStore 
           };
           this.modal = new _modal__WEBPACK_IMPORTED_MODULE_1__["default"](options);
@@ -183,15 +190,23 @@ class Bar extends _komponent__WEBPACK_IMPORTED_MODULE_0__["default"] {
           this.modal.update();
         }
       } else {
-        this.modal.remove();
-        this.modal = null;
+        this.removeModal();
       }
+    }
+
+    handleSubmit() {
+        this.memesContainer.removeMemes();
+        setTimeout(() => {
+            this.memesContainer.endLoading();
+            this.memesContainer.appendMemes(this.searchBar.val());
+        }, 3000);
     }
 
     render() {
         $$(() => setTimeout(() => this.bar.removeClass("hidden"), 500));
         this.uploadButton.on("click", () => this.toggle());
-        this.searchBar.on("input", (e) => this.handleInput(e));
+        this.searchBar.on("input", () => this.handleInput());
+        this.searchBar.on("submit", () => this.handleSubmit());
     }
 }
 
@@ -310,8 +325,8 @@ class MemePool {
     constructor(options) {
         this.header = new _header__WEBPACK_IMPORTED_MODULE_0__["default"](options);
         this.uploadForm = new _upload_form__WEBPACK_IMPORTED_MODULE_2__["default"](options);
-        this.bar = new _bar__WEBPACK_IMPORTED_MODULE_1__["default"](Object.assign(options, { uploadForm: this.uploadForm }));
         this.memesContainer = new _memes_container__WEBPACK_IMPORTED_MODULE_3__["default"](options);
+        this.bar = new _bar__WEBPACK_IMPORTED_MODULE_1__["default"](Object.assign(options, { uploadForm: this.uploadForm, memesContainer: this.memesContainer }));
     }
 
     render() {
@@ -351,45 +366,50 @@ class MemesContainer extends _komponent__WEBPACK_IMPORTED_MODULE_0__["default"] 
 
     }
 
-    appendMemes() {
-        // this.database = firebase.database().ref("memes");
-        let i = 0;
+    appendMeme(data) {
+        const memesItem = `<li class="hidden"><img src="${data.url}"><a href="${data.url}" download="${data.title.toLowerCase()}">${data.title}</a></li>`;
+        this.memes.append(memesItem); 
+        this.meme = $$(".content .memes-container ul li");
+        this.memeTitle = $$(".content .memes-container ul li a");
+        this.memeTitle.on("click", () => {
+            const xhr = new XMLHttpRequest();
+            xhr.repsonseType = "blob";
+            xhr.onload = (event) => {
+                const blob = xhr.response;
+            }
+            xhr.open("GET", data.url);
+            xhr.send();
+        })
+        setTimeout(() => this.meme.removeClass("hidden"), 1100);
+    }
+
+    appendMemes(tag = null) {
         this.database.on("child_added", (snapshot) => {
             const data = snapshot.val();
-            // const file = new File([data.url], data.title.toLowerCase().split(" ").join());
-            const memesItem = `<li class="hidden" id="m${i}"><img src="${data.url}"><a href="${data.url}" download="${data.title.toLowerCase()}" id="a${i}">${data.title}</a></li>`;
-            this.memes.append(memesItem); // <a href="${data.url}" class="hidden">Download</a>
-            // this.memes.append(`<li class="hidden"><img src="${data.url}"><form method="get" action="${data.url}"><button type="submit">${data.title}</button></form></li>`); // <a href="${data.url}" class="hidden">Download</a>
-            this.meme = $$(".content .memes-container ul li");
-            this.memeTitle = $$(".content .memes-container ul li a");
-            this.memeTitle.on("click", () => {
-                const xhr = new XMLHttpRequest();
-                xhr.repsonseType = "blob";
-                xhr.onload = (event) => {
-                    const blob = xhr.response;
-                }
-                xhr.open("GET", data.url);
-                xhr.send();
-            }) // check (no internet)
-            setTimeout(() => this.meme.removeClass("hidden"), 1100);
-            // this.memeTitle.removeClass("hidden");
-            // this.meme.removeClass("hidden");
-            i++;
+            if (!tag) {
+                this.appendMeme(data);
+            } else {
+                if (data.tags.includes(tag)) {
+                    this.appendMeme(data);
+                };
+            }
         });
+    }
+
+    removeMemes() {
+        this.memes.children().each(child => child.remove());
+        this.memes.append('<img src="assets/images/loading.gif" class="loading">');
+        this.loadingSign = $$(".loading");
+    }
+
+    endLoading() {
+        this.loadingSign.remove();
     }
 
     render() {
         setTimeout(() => this.memesContainer.removeClass("hidden"), 500);
         setTimeout(() => this.header.removeClass("hidden"), 1000);
         this.appendMemes();
-        // this.memesContainer.children().each((komponent) => {
-        //     const node = $$(komponent);
-        //     // node.removeClass("hidden");
-        //     setTimeout(() => {
-        //         node.children().each(child => $$(child).removeClass("hidden"))
-        //     }, 1000);
-        // })
-
     }
 }
 
@@ -412,7 +432,6 @@ class Modal {
     this.searchBar = options.searchBar;
     this.tagStore = options.tagStore;
     this.tags = Object.keys(this.tagStore).sort();
-    // this.keyword = this.searchBar.val();
   }
 
   loadList() {
@@ -430,10 +449,18 @@ class Modal {
         this.tags.forEach((tag) => {
           if (tag.includes(this.searchBar.val())) {
             const unit = this.tagStore[tag] > 1 ? "memes" : "meme";
-            this.list.append(`<li class="recommendation"><p class="tag">#${tag}</p><p class="meme-count">${this.tagStore[tag]} ${unit} found</p></li>`)
+            this.list.append(`<li class="recommendation"><p class="tag">#${tag}</p><p class="meme-count">${this.tagStore[tag]} ${unit} found</p></li>`);
+            const recommendation = $$(".bar .modal .recommendation");
+            recommendation.on('click', () => this.selectRecommendation(tag))
           }
         })
     }, 2500)
+  }
+
+  selectRecommendation(tag) {
+    this.searchBar.val(tag);
+    this.bar.removeModal();
+    this.bar.handleSubmit();
   }
 
   load() {

@@ -4,7 +4,6 @@ class Modal {
     this.searchBar = options.searchBar;
     this.tagStore = options.tagStore;
     this.tags = Object.keys(this.tagStore).sort();
-    // this.keyword = this.searchBar.val();
   }
 
   loadList() {
@@ -22,10 +21,18 @@ class Modal {
         this.tags.forEach((tag) => {
           if (tag.includes(this.searchBar.val())) {
             const unit = this.tagStore[tag] > 1 ? "memes" : "meme";
-            this.list.append(`<li class="recommendation"><p class="tag">#${tag}</p><p class="meme-count">${this.tagStore[tag]} ${unit} found</p></li>`)
+            this.list.append(`<li class="recommendation"><p class="tag">#${tag}</p><p class="meme-count">${this.tagStore[tag]} ${unit} found</p></li>`);
+            const recommendation = $$(".bar .modal .recommendation");
+            recommendation.on('click', () => this.selectRecommendation(tag))
           }
         })
     }, 2500)
+  }
+
+  selectRecommendation(tag) {
+    this.searchBar.val(tag);
+    this.bar.removeModal();
+    this.bar.handleSubmit();
   }
 
   load() {

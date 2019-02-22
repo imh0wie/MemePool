@@ -7,8 +7,8 @@ class MemePool {
     constructor(options) {
         this.header = new Header(options);
         this.uploadForm = new UploadForm(options);
-        this.bar = new Bar(Object.assign(options, { uploadForm: this.uploadForm }));
         this.memesContainer = new MemesContainer(options);
+        this.bar = new Bar(Object.assign(options, { uploadForm: this.uploadForm, memesContainer: this.memesContainer }));
     }
 
     render() {

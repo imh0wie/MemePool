@@ -10,6 +10,7 @@ class Bar extends Komponent {
         this.opened = false;
         this.searchBar = $$(".bar .inner-bar #search-container input");
         this.tags = [];
+        this.memesContainer = options.memesContainer
     }
 
     toggleForm() {
@@ -33,6 +34,11 @@ class Bar extends Komponent {
         }
     }
 
+    removeModal() {
+        this.modal.remove();
+        this.modal = null;
+    }
+
     handleInput() {
       this.database.once('value', (snapshot) => {
         this.tagStore = {};
@@ -44,8 +50,9 @@ class Bar extends Komponent {
       if (this.searchBar.val().length > 0) {
         if (!this.modal) {
           const options = {
-            bar: this.bar,
+            bar: this,
             searchBar: this.searchBar,
+            memesContainer: this.memesContainer,
             tagStore: this.tagStore 
           };
           this.modal = new Modal(options);
@@ -54,15 +61,23 @@ class Bar extends Komponent {
           this.modal.update();
         }
       } else {
-        this.modal.remove();
-        this.modal = null;
+        this.removeModal();
       }
+    }
+
+    handleSubmit() {
+        this.memesContainer.removeMemes();
+        setTimeout(() => {
+            this.memesContainer.endLoading();
+            this.memesContainer.appendMemes(this.searchBar.val());
+        }, 3000);
     }
 
     render() {
         $$(() => setTimeout(() => this.bar.removeClass("hidden"), 500));
         this.uploadButton.on("click", () => this.toggle());
-        this.searchBar.on("input", (e) => this.handleInput(e));
+        this.searchBar.on("input", () => this.handleInput());
+        this.searchBar.on("submit", () => this.handleSubmit());
     }
 }
 
