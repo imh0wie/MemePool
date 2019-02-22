@@ -50,7 +50,6 @@ class MemesContainer extends Komponent {
     }
 
     endLoading() {
-        debugger
         this.loadingSign.remove();
     }
 

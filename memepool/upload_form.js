@@ -38,9 +38,6 @@ class UploadForm extends Komponent {
     }
     
     toggleContent() {
-        // if (!this.opened) {
-
-        // }
         if (this.file) {
             this.canvas.removeClass("none");
             this.defaultMeme.addClass("none");
@@ -49,12 +46,6 @@ class UploadForm extends Komponent {
             this.defaultMeme.removeClass("none");
         }
         this.toggleChildren(this.form, "removed", 0);
-        // if (this.opened) {
-        //     debugger
-        //     this.removeLeft();
-        //     this.removeRight();
-        // }
-        // this.opened = this.opened ? false : true;
         this.ready();
     }
 
@@ -67,7 +58,6 @@ class UploadForm extends Komponent {
     }
 
     handleTags(e) {
-        // debugger
         e.preventDefault();
         if (!this.tags) this.tags = [];
         const tag = this.tagsInput.val().toLowerCase();
@@ -95,7 +85,6 @@ class UploadForm extends Komponent {
         reader.addEventListener("load", function() {
             this.img.src = reader.result;
         }, false)
-        // this.uploaded = true;
     }
 
     handlePreview(e) {
@@ -206,7 +195,7 @@ class UploadForm extends Komponent {
         }
         this.fileName = this.title.toLowerCase().split(" ").join("-");
         this.fileType = this.file.name.split("").reverse().slice(0, 4).reverse().join("");
-        const storageRef = firebase.storage().ref(); // /memes/${this.fileName}${this.fileType}
+        const storageRef = firebase.storage().ref();
         const memeRef = storageRef.child(`${this.fileName}${this.fileType}`);
         const uploadTask = memeRef.putString(this.previewCanvas.toDataURL(), 'data_url');
         uploadTask.on("state_changed",

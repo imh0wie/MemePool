@@ -24,7 +24,6 @@ class Komponent {
             const childEl = el.children()[i];
             const child = $$(childEl);
             if (devault) setTimeout(() => child.removeClass(klass), t);
-            // if (cb) cb(child, t / child.children().length);
             if (cb) cb(child, t);
             t += dt;
         }
@@ -37,7 +36,6 @@ class Komponent {
         for (let i = 0; i < el.children().length; i++) {
             const child = el.children()[i];
             const element = $$(child);
-            // if ($(child).hasClass("hidden")) {
             if (element.children().length > 0) {
                 if (devault) () => element.removeClass(klass);
                 this.renderChildrenInOrderEvenly(element, t, cb, devault);

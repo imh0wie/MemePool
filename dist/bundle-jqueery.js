@@ -175,7 +175,6 @@ function querify(data) {
 class NodeCollection {
     constructor(nodes) {
         this.nodes = nodes; // htmlEls: an array of HTML Elements
-        // this.length = this.nodes.length;
     }
 
     each(callback) {
@@ -223,26 +222,6 @@ class NodeCollection {
         
     }
 
-    // prepend(newNodes) {
-    //     if (this.nodes.length === 0) {
-    //         return ;
-    //     } else if (typeof newNodes === "object" && !(newNodes instanceof NodeCollection)) {
-    //         newNodes = $l(newNodes);
-    //     }
-
-    //     if (typeof newNodes === "string") {
-    //         this.each((node) => {
-    //             node.innerHTML = newNodes + node.innerHTML;
-    //         });
-    //     } else if (newNodes instanceof NodeCollection) {
-    //         this.each((node) => {
-    //             newNodes.each((newNode) => {
-    //                 node.insertBefore(newNode.cloneNode(true), node.children()[0]);
-    //             });
-    //         });
-    //     } 
-    // }
-
     remove(selector = null) {
         if (!selector) {
             this.each(node => {
@@ -253,7 +232,6 @@ class NodeCollection {
                 const node = document.querySelector(selector);
                 if (child === node) $$(selector).remove();
             });
-            // when selector is provided
         }
     }
 
