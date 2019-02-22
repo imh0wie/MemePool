@@ -1,4 +1,4 @@
-import Komponent from "./komponent.js";
+import Komponent from "./komponent";
 
 class MemesContainer extends Komponent {
     constructor(options) {

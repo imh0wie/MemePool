@@ -125,10 +125,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _komponent_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./komponent.js */ "./memepool/komponent.js");
+/* harmony import */ var _komponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./komponent */ "./memepool/komponent.js");
+/* harmony import */ var _modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modal */ "./memepool/modal.js");
 
 
-class Bar extends _komponent_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
+class Bar extends _komponent__WEBPACK_IMPORTED_MODULE_0__["default"] {
     constructor(options) {
         super(options);
         this.database = options.database;
@@ -162,23 +163,35 @@ class Bar extends _komponent_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     }
 
     handleInput() {
-      console.log(this.searchBar.val());
       this.database.once('value', (snapshot) => {
-        let arr = [];
+        this.tagStore = {};
         snapshot.forEach((childSnapshot) => {
           const tags = childSnapshot.val().tags;
-          arr.push(tags);
+          tags.forEach(tag => this.tagStore[tag] ? this.tagStore[tag] += 1 : this.tagStore[tag] = 1);
         });
-        arr = [].concat.apply([], arr);
-        this.tags = Array.from(new Set(arr));
-        debugger
       });
+      if (this.searchBar.val().length > 0) {
+        if (!this.modal) {
+          const options = {
+            bar: this.bar,
+            searchBar: this.searchBar,
+            tagStore: this.tagStore 
+          };
+          this.modal = new _modal__WEBPACK_IMPORTED_MODULE_1__["default"](options);
+          this.modal.render();
+        } else {
+          
+        }
+      } else {
+        this.modal.remove();
+        this.modal = null;
+      }
     }
 
     render() {
         $$(() => setTimeout(() => this.bar.removeClass("hidden"), 500));
         this.uploadButton.on("click", () => this.toggle());
-        this.searchBar.on("input", () => this.handleInput());
+        this.searchBar.on("input", (e) => this.handleInput(e));
     }
 }
 
@@ -322,10 +335,10 @@ class MemePool {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _komponent_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./komponent.js */ "./memepool/komponent.js");
+/* harmony import */ var _komponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./komponent */ "./memepool/komponent.js");
 
 
-class MemesContainer extends _komponent_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
+class MemesContainer extends _komponent__WEBPACK_IMPORTED_MODULE_0__["default"] {
     constructor(options) {
         super(options);
         this.memesContainer = $$(".content .memes-container");
@@ -384,6 +397,68 @@ class MemesContainer extends _komponent_js__WEBPACK_IMPORTED_MODULE_0__["default
 
 /***/ }),
 
+/***/ "./memepool/modal.js":
+/*!***************************!*\
+  !*** ./memepool/modal.js ***!
+  \***************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+class Modal {
+  constructor(options) {
+    this.bar = options.bar;
+    this.searchBar = options.searchBar;
+    this.tagStore = options.tagStore;
+    this.tags = Object.keys(this.tagStore).sort();
+    // this.keyword = this.searchBar.val();
+  }
+
+  loadList() {
+    this.listElement = document.createElement('ul');
+    this.listElement.classList.add('modal', 'folded');
+    this.barElement = document.querySelector('.bar');
+    this.barElement.appendChild(this.listElement);
+    setTimeout(() => this.listElement.classList.remove('folded'), 100);
+  }
+
+  remove() {
+    this.barElement.removeChild(this.listElement);
+  }
+
+  render() {
+    this.loadList();
+    this.modal = $$('.bar .modal');
+    this.modal.removeClass('folded');
+    setTimeout(() => {
+        this.modal.append('<img src="assets/images/loading.gif" class="loading">');
+        this.loadingSign = $$(".loading");
+    }, 200)
+    setTimeout(() => {
+      this.loadingSign.remove();
+      this.list = $$(".bar .modal");
+      debugger
+      this.tags.forEach((tag) => {
+        debugger
+        if (tag.includes(this.searchBar.val())) {
+          debugger
+          const unit = this.tagStore[tag] > 1 ? "memes" : "meme";
+          this.list.append(`<li class="recommendation"><p class="tag">#${tag}</p><p class="meme-count">${this.tagStore[tag]} ${unit} found</p></li>`)
+        }
+      })
+    }, 2500)
+  }
+
+  update() {
+
+  }
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (Modal);
+
+/***/ }),
+
 /***/ "./memepool/upload_form.js":
 /*!*********************************!*\
   !*** ./memepool/upload_form.js ***!
@@ -424,11 +499,9 @@ class UploadForm extends _komponent__WEBPACK_IMPORTED_MODULE_0__["default"] {
         this.tagsInputEl = document.querySelector(".content form .blanks .tags");
         this.fileInputEl = document.querySelector(".content form .blanks .file");
         this.previewCanvas = document.querySelector(".content form .preview #canvas")
-        // this.previewImg = options.previewImg;
         this.file = options.file;
         this.opened = false;
         this.drawPreview = this.drawPreview.bind(this);
-        // this.handleTags = this.handleTags.bind(this);
     }
     
     toggleContainer() {

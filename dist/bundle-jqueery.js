@@ -190,8 +190,12 @@ class NodeCollection {
         }
     }
 
-    val() {
-        return this.nodes.length > 0 ? this.nodes[0].value : null;
+    val(newValue) {
+        if (newValue) {
+            this.nodes[0].value = newValue;
+        } else {
+            return this.nodes.length > 0 ? this.nodes[0].value : null;
+        }
     }
 
     empty() {

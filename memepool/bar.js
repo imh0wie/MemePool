@@ -1,5 +1,5 @@
-import Komponent from "./komponent.js";
-
+import Komponent from "./komponent";
+import Modal from "./modal";
 class Bar extends Komponent {
     constructor(options) {
         super(options);
@@ -34,23 +34,35 @@ class Bar extends Komponent {
     }
 
     handleInput() {
-      console.log(this.searchBar.val());
       this.database.once('value', (snapshot) => {
-        let arr = [];
+        this.tagStore = {};
         snapshot.forEach((childSnapshot) => {
           const tags = childSnapshot.val().tags;
-          arr.push(tags);
+          tags.forEach(tag => this.tagStore[tag] ? this.tagStore[tag] += 1 : this.tagStore[tag] = 1);
         });
-        arr = [].concat.apply([], arr);
-        this.tags = Array.from(new Set(arr));
-        debugger
       });
+      if (this.searchBar.val().length > 0) {
+        if (!this.modal) {
+          const options = {
+            bar: this.bar,
+            searchBar: this.searchBar,
+            tagStore: this.tagStore 
+          };
+          this.modal = new Modal(options);
+          this.modal.render();
+        } else {
+          
+        }
+      } else {
+        this.modal.remove();
+        this.modal = null;
+      }
     }
 
     render() {
         $$(() => setTimeout(() => this.bar.removeClass("hidden"), 500));
         this.uploadButton.on("click", () => this.toggle());
-        this.searchBar.on("input", () => this.handleInput());
+        this.searchBar.on("input", (e) => this.handleInput(e));
     }
 }
 

@@ -28,11 +28,9 @@ class UploadForm extends Komponent {
         this.tagsInputEl = document.querySelector(".content form .blanks .tags");
         this.fileInputEl = document.querySelector(".content form .blanks .file");
         this.previewCanvas = document.querySelector(".content form .preview #canvas")
-        // this.previewImg = options.previewImg;
         this.file = options.file;
         this.opened = false;
         this.drawPreview = this.drawPreview.bind(this);
-        // this.handleTags = this.handleTags.bind(this);
     }
     
     toggleContainer() {
