@@ -1,4 +1,4 @@
-import { Komponent } from "./komponent";
+import Komponent from "./komponent";
 
 class UploadForm extends Komponent {
     constructor(options) {

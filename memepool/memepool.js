@@ -1,7 +1,7 @@
-import { Header } from "./header";
-import { Bar } from "./bar";
-import { UploadForm } from "./upload_form";
-import { MemesContainer } from "./memes_container";
+import Header from "./header";
+import Bar from "./bar";
+import UploadForm from "./upload_form";
+import MemesContainer from "./memes_container";
 
 class MemePool {
     constructor(options) {

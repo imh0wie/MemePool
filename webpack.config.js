@@ -1,13 +1,13 @@
 const path = require('path');
 module.exports = {
   entry: {
-    a: "./lib/jqueery.js"
+    jqueery: "./lib/jqueery.js",
+    app: "./memepool/app.js"
   },
   output: {
-  	filename: "bundle.js",
-    path: path.resolve(__dirname, 'lib')
+  	filename: "./bundle-[name].js",
+    path: path.resolve(__dirname, 'dist')
   },
-  plugins: [ new webpack.optimize.CommonsChunkPlugin("init.js") ],
   resolve: {
     extensions: [".js", "*"],
   },

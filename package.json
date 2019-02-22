@@ -1,12 +1,13 @@
 {
   "name": "jQueery",
   "version": "1.0.0",
-  "description": "",
+  "description": "Memepool is a photo-sharing application for users to search, customize and share memes. It is built by JavaScript and a customized JavaScript library inspired by jQuery for HTML manipulation and traversal, event handling, and AJAX. It has a simple API for developers of all levels.",
   "main": "webpack.config.js",
   "directories": {
-    "lib": "lib",
-    "memepool": "memepool"
+    "lib": "lib"
   },
+  "dependencies": {},
+  "devDependencies": {},
   "scripts": {
     "webpack": "webpack --watch --mode=development"
   },
@@ -20,10 +21,5 @@
   "bugs": {
     "url": "https://github.com/h0wiechan/MemePool/issues"
   },
-  "homepage": "https://github.com/h0wiechan/MemePool#readme",
-  "dependencies": {},
-  "devDependencies": {
-    "webpack": "^4.29.3",
-    "webpack-cli": "^3.2.3"
-  }
+  "homepage": "https://github.com/h0wiechan/MemePool#readme"
 }
