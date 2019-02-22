@@ -577,6 +577,11 @@ header {
     height: 310px;
 }
 
+.content .memes-container ul .loading {
+    display: block;
+    margin: 0 auto;
+}
+
 .content .memes-container ul li {
     list-style: none;
     margin: 10px 14px;

@@ -140,6 +140,14 @@ class Bar extends _komponent__WEBPACK_IMPORTED_MODULE_0__["default"] {
         this.searchBar = $$(".bar .inner-bar #search-container input");
         this.tags = [];
         this.memesContainer = options.memesContainer
+        this.browseButton = $$(".bar .inner-bar button");
+        this.browseButton.on('click', () => {
+            this.memesContainer.removeMemes();
+            setTimeout(() => {
+                this.memesContainer.endLoading();
+                this.memesContainer.appendMemes();
+            }, 2000);
+        });
     }
 
     toggleForm() {
@@ -195,6 +203,7 @@ class Bar extends _komponent__WEBPACK_IMPORTED_MODULE_0__["default"] {
     }
 
     handleSubmit() {
+        this.memesContainer.setHeader(this.searchBar.val());
         this.memesContainer.removeMemes();
         setTimeout(() => {
             this.memesContainer.endLoading();
@@ -362,8 +371,8 @@ class MemesContainer extends _komponent__WEBPACK_IMPORTED_MODULE_0__["default"] 
         this.database = options.database
     }
 
-    setHeader() {
-
+    setHeader(tag) {
+        this.header.val(`#${tag}`);
     }
 
     appendMeme(data) {
@@ -403,6 +412,7 @@ class MemesContainer extends _komponent__WEBPACK_IMPORTED_MODULE_0__["default"] 
     }
 
     endLoading() {
+        debugger
         this.loadingSign.remove();
     }
 

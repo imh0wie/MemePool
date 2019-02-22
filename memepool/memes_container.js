@@ -9,8 +9,8 @@ class MemesContainer extends Komponent {
         this.database = options.database
     }
 
-    setHeader() {
-
+    setHeader(tag) {
+        this.header.val(`#${tag}`);
     }
 
     appendMeme(data) {
@@ -50,6 +50,7 @@ class MemesContainer extends Komponent {
     }
 
     endLoading() {
+        debugger
         this.loadingSign.remove();
     }
 

@@ -11,6 +11,14 @@ class Bar extends Komponent {
         this.searchBar = $$(".bar .inner-bar #search-container input");
         this.tags = [];
         this.memesContainer = options.memesContainer
+        this.browseButton = $$(".bar .inner-bar button");
+        this.browseButton.on('click', () => {
+            this.memesContainer.removeMemes();
+            setTimeout(() => {
+                this.memesContainer.endLoading();
+                this.memesContainer.appendMemes();
+            }, 2000);
+        });
     }
 
     toggleForm() {
@@ -66,6 +74,7 @@ class Bar extends Komponent {
     }
 
     handleSubmit() {
+        this.memesContainer.setHeader(this.searchBar.val());
         this.memesContainer.removeMemes();
         setTimeout(() => {
             this.memesContainer.endLoading();
