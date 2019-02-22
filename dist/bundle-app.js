@@ -180,7 +180,7 @@ class Bar extends _komponent__WEBPACK_IMPORTED_MODULE_0__["default"] {
           this.modal = new _modal__WEBPACK_IMPORTED_MODULE_1__["default"](options);
           this.modal.render();
         } else {
-          
+          this.modal.update();
         }
       } else {
         this.modal.remove();
@@ -423,6 +423,26 @@ class Modal {
     setTimeout(() => this.listElement.classList.remove('folded'), 100);
   }
 
+  showList() {
+    setTimeout(() => {
+        this.loadingSign.remove();
+        this.list = $$(".bar .modal");
+        this.tags.forEach((tag) => {
+          if (tag.includes(this.searchBar.val())) {
+            const unit = this.tagStore[tag] > 1 ? "memes" : "meme";
+            this.list.append(`<li class="recommendation"><p class="tag">#${tag}</p><p class="meme-count">${this.tagStore[tag]} ${unit} found</p></li>`)
+          }
+        })
+    }, 2500)
+  }
+
+  load() {
+    setTimeout(() => {
+        this.modal.append('<img src="assets/images/loading.gif" class="loading">');
+        this.loadingSign = $$(".loading");
+    }, 200)
+  }
+
   remove() {
     this.barElement.removeChild(this.listElement);
   }
@@ -431,27 +451,14 @@ class Modal {
     this.loadList();
     this.modal = $$('.bar .modal');
     this.modal.removeClass('folded');
-    setTimeout(() => {
-        this.modal.append('<img src="assets/images/loading.gif" class="loading">');
-        this.loadingSign = $$(".loading");
-    }, 200)
-    setTimeout(() => {
-      this.loadingSign.remove();
-      this.list = $$(".bar .modal");
-      debugger
-      this.tags.forEach((tag) => {
-        debugger
-        if (tag.includes(this.searchBar.val())) {
-          debugger
-          const unit = this.tagStore[tag] > 1 ? "memes" : "meme";
-          this.list.append(`<li class="recommendation"><p class="tag">#${tag}</p><p class="meme-count">${this.tagStore[tag]} ${unit} found</p></li>`)
-        }
-      })
-    }, 2500)
+    this.load();
+    this.showList();
   }
 
   update() {
-
+    this.modal.children().each(child => child.remove());
+    this.load();
+    this.showList();
   }
 }
 

@@ -51,7 +51,7 @@ class Bar extends Komponent {
           this.modal = new Modal(options);
           this.modal.render();
         } else {
-          
+          this.modal.update();
         }
       } else {
         this.modal.remove();
