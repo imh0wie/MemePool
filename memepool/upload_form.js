@@ -274,7 +274,6 @@ class UploadForm extends Komponent {
     }
 
     ready() {
-        // debugger
         if (this.titleInput) this.titleInput.on("change", (e) => this.title = e.currentTarget.value.toUpperCase());
         if (this.upperTextInput) this.upperTextInput.on("change", (e) => this.upperText = e.currentTarget.value.toUpperCase());
         if (this.lowerTextInput) this.lowerTextInput.on("change", (e) => this.lowerText = e.currentTarget.value.toUpperCase());
@@ -285,7 +284,6 @@ class UploadForm extends Komponent {
         if (this.fileInput) this.fileInput.on("change", (e) => this.handleUpload(e));
         if (this.previewButton) this.previewButton.on("click", (e) => this.handlePreview(e));
         if (this.submitButton) this.submitButton.on("click", (e) => this.handleSubmit(e));
-        // this.drawPreview();
     }
 }
 

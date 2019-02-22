@@ -108,6 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     const options = {
         documentEl: documentEl,
+        database: firebase.database().ref("memes")
     };
     const memepool = new _memepool__WEBPACK_IMPORTED_MODULE_0__["default"](options);
     memepool.render();
@@ -130,10 +131,13 @@ __webpack_require__.r(__webpack_exports__);
 class Bar extends _komponent_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     constructor(options) {
         super(options);
+        this.database = options.database;
         this.bar = $$(".bar.hidden")
         this.uploadButton = $$(".bar .inner-bar .add-button");
         this.uploadForm = options.uploadForm;
         this.opened = false;
+        this.searchBar = $$(".bar .inner-bar #search-container input");
+        this.tags = [];
     }
 
     toggleForm() {
@@ -157,9 +161,24 @@ class Bar extends _komponent_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
         }
     }
 
+    handleInput() {
+      console.log(this.searchBar.val());
+      this.database.once('value', (snapshot) => {
+        let arr = [];
+        snapshot.forEach((childSnapshot) => {
+          const tags = childSnapshot.val().tags;
+          arr.push(tags);
+        });
+        arr = [].concat.apply([], arr);
+        this.tags = Array.from(new Set(arr));
+        debugger
+      });
+    }
+
     render() {
         $$(() => setTimeout(() => this.bar.removeClass("hidden"), 500));
         this.uploadButton.on("click", () => this.toggle());
+        this.searchBar.on("input", () => this.handleInput());
     }
 }
 
@@ -312,6 +331,7 @@ class MemesContainer extends _komponent_js__WEBPACK_IMPORTED_MODULE_0__["default
         this.memesContainer = $$(".content .memes-container");
         this.header = $$(".content .memes-container header p");
         this.memes = $$(".content .memes-container ul");
+        this.database = options.database
     }
 
     setHeader() {
@@ -319,7 +339,7 @@ class MemesContainer extends _komponent_js__WEBPACK_IMPORTED_MODULE_0__["default
     }
 
     appendMemes() {
-        this.database = firebase.database().ref("memes");
+        // this.database = firebase.database().ref("memes");
         let i = 0;
         this.database.on("child_added", (snapshot) => {
             const data = snapshot.val();
@@ -650,7 +670,6 @@ class UploadForm extends _komponent__WEBPACK_IMPORTED_MODULE_0__["default"] {
     }
 
     ready() {
-        // debugger
         if (this.titleInput) this.titleInput.on("change", (e) => this.title = e.currentTarget.value.toUpperCase());
         if (this.upperTextInput) this.upperTextInput.on("change", (e) => this.upperText = e.currentTarget.value.toUpperCase());
         if (this.lowerTextInput) this.lowerTextInput.on("change", (e) => this.lowerText = e.currentTarget.value.toUpperCase());
@@ -661,7 +680,6 @@ class UploadForm extends _komponent__WEBPACK_IMPORTED_MODULE_0__["default"] {
         if (this.fileInput) this.fileInput.on("change", (e) => this.handleUpload(e));
         if (this.previewButton) this.previewButton.on("click", (e) => this.handlePreview(e));
         if (this.submitButton) this.submitButton.on("click", (e) => this.handleSubmit(e));
-        // this.drawPreview();
     }
 }
 

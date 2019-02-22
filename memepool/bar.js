@@ -3,10 +3,13 @@ import Komponent from "./komponent.js";
 class Bar extends Komponent {
     constructor(options) {
         super(options);
+        this.database = options.database;
         this.bar = $$(".bar.hidden")
         this.uploadButton = $$(".bar .inner-bar .add-button");
         this.uploadForm = options.uploadForm;
         this.opened = false;
+        this.searchBar = $$(".bar .inner-bar #search-container input");
+        this.tags = [];
     }
 
     toggleForm() {
@@ -30,9 +33,24 @@ class Bar extends Komponent {
         }
     }
 
+    handleInput() {
+      console.log(this.searchBar.val());
+      this.database.once('value', (snapshot) => {
+        let arr = [];
+        snapshot.forEach((childSnapshot) => {
+          const tags = childSnapshot.val().tags;
+          arr.push(tags);
+        });
+        arr = [].concat.apply([], arr);
+        this.tags = Array.from(new Set(arr));
+        debugger
+      });
+    }
+
     render() {
         $$(() => setTimeout(() => this.bar.removeClass("hidden"), 500));
         this.uploadButton.on("click", () => this.toggle());
+        this.searchBar.on("input", () => this.handleInput());
     }
 }
 

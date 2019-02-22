@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     const options = {
         documentEl: documentEl,
+        database: firebase.database().ref("memes")
     };
     const memepool = new MemePool(options);
     memepool.render();

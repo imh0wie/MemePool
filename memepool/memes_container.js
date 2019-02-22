@@ -6,6 +6,7 @@ class MemesContainer extends Komponent {
         this.memesContainer = $$(".content .memes-container");
         this.header = $$(".content .memes-container header p");
         this.memes = $$(".content .memes-container ul");
+        this.database = options.database
     }
 
     setHeader() {
@@ -13,7 +14,7 @@ class MemesContainer extends Komponent {
     }
 
     appendMemes() {
-        this.database = firebase.database().ref("memes");
+        // this.database = firebase.database().ref("memes");
         let i = 0;
         this.database.on("child_added", (snapshot) => {
             const data = snapshot.val();
